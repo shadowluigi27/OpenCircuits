@@ -30,6 +30,7 @@ import {ThumbnailGenerator} from "site/shared/utils/ThumbnailGenerator";
 import {DigitalCircuitView} from "../views/DigitalCircuitView";
 import {DigitalItemNavController} from "./DigitalItemNavController";
 import {CircuitMetadata} from "core/models/CircuitMetadata";
+import { TutorialPopupController } from "./TutorialPopupController";
 
 export class DigitalCircuitController extends MainDesignerController {
     private icController: ICDesignerController;
@@ -71,6 +72,8 @@ export class DigitalCircuitController extends MainDesignerController {
         this.contextMenu = new ContextMenuController(this);
         this.copyController = new DigitalCopyController(this);
         this.sideNav = new SideNavController(this, this.headerController);
+
+        new TutorialPopupController();
 
         this.loginController = new LoginController(this, this.sideNav);
     }
