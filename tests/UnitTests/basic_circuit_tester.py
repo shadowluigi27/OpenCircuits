@@ -23,6 +23,22 @@ if (circuitType == "series" or circuitType == "Series"):
     total_resistance_series = sum(resistorValues)
     print("Total Series Resistance: " + str(total_resistance_series) + " Ohms")
     totalCurrent = voltage_source / total_resistance_series # Ohm's Law to find total current
+    print("Total current: " + str(totalCurrent) + " Amps")
+
+    # Find voltage at certain resistor (values work for series only for now) 
+
+    # specify which resistor you want to find voltage for
+    specified_res = int(input("Enter resistor number: "))
+    if (specified_res > num_resistors or specified_res < 1):
+        print("ERROR: Resistor does not exist") 
+        raise SystemExit
+
+    specified_res_val = resistorValues[specified_res - 1]
+
+    specified_res_volt = totalCurrent * specified_res_val
+
+    print("Total voltage at resistor " + str(specified_res) + ": " + str(specified_res_volt) + "Volts")
+
 # parallel resistance and current calculation
 elif (circuitType == "Parallel" or circuitType == "parallel"):
     count = len(resistorValues)
@@ -36,7 +52,11 @@ elif (circuitType == "Parallel" or circuitType == "parallel"):
     total_resistance_parallel = 1 / sum(resistorValues)
     print("Total Parallel Resistance: " + str(total_resistance_parallel) + " Ohms")
     totalCurrent = voltage_source / total_resistance_parallel 
+    print("Total current: " + str(totalCurrent) + " Amps")
 else:
     print("ERROR: INVALID INPUT") 
 
-print("Total current: " + str(totalCurrent) + " Amps")
+    
+
+
+
