@@ -1,6 +1,6 @@
 * Netlist solution for circuit
 
-V1 1 0 12; 12Volt Source
+V1 1 0 12; 12 Volt Source
 R1 1 2 10; 10 Ohm Resistor
 R2 1 3 20; 20 Ohm Resistor
 R3 2 3 7.5; 7.5 Ohm Resistor
