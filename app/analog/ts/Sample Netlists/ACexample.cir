@@ -1,0 +1,13 @@
+*RC Circuit
+
+r1 1 2 10k
+
+c1 2 0 ln
+
+vin 1 0 ac 1 dc 0
+
+.ac dec 10 .01 10
+
+.probe
+
+.end
