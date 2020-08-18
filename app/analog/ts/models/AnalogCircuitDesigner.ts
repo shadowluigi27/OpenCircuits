@@ -357,7 +357,7 @@ export class AnalogCircuitDesigner extends CircuitDesigner {
 
     //When adding a new component to the netlist parser, do the following:
     // - Add a new counter variable for the naming convention
-    // - Add an elseiif statement to all the others in the for loop. 
+    // - Add an else-if statement to all the others in the for loop.
     //      You should (hopefully) be fine if you copy-paste a pre-existing else-if statement. Just triple-check that all variables were changed appropriately!
     private stringifyNetList(NetNodes: { name:string, xpos:number, ypos:number, nvals:number[]}[]): string {
         //First line is always the title of the netlist
@@ -467,6 +467,10 @@ export class AnalogCircuitDesigner extends CircuitDesigner {
         else if (batteryIndex > -1) {
             NetNodes[batteryIndex].nvals[0] = 0;
         }
+        //No ground or battery was given! The circuit needs one of these to act as a ground
+        else {
+            return "ERROR: A circuit must have at least 1 battery and/or ground component to act as the ground\n";
+        }
 
         
         //objects[0].ports.currentPorts[0].connections[0].p2.parent.name
@@ -495,8 +499,13 @@ export class AnalogCircuitDesigner extends CircuitDesigner {
     private updateNetList(): void {
         this.netlist = [];
         let temp: string = this.giveNetList();
-        this.netlist = temp.split("\n");
+        //If the netlist generation returns an error, don't update this.netlist
+        if (temp.substring(0, 5) == "ERROR") {
+            console.log("netlist error");
+            return null;
+        }
 
+        this.netlist = temp.split("\n");
         //this.netlist.push("test array");
         //this.netlist.push("V1 1 0 1");
         //this.netlist.push("R1 1 2 1");
