@@ -10,7 +10,7 @@ import {AnalogObjectSet} from "analog/utils/ComponentUtils";
 import {AnalogComponent} from "./AnalogComponent";
 import {AnalogWire} from "./AnalogWire";
 import {AnalogPort} from "./ports/AnalogPort";
-import { Battery, Resistor, Capacitor } from "./eeobjects";
+import { Battery, Resistor, Capacitor, Inductor } from "./eeobjects";
 
 @serializable("AnalogCircuitDesigner")
 export class AnalogCircuitDesigner extends CircuitDesigner {
@@ -373,6 +373,7 @@ export class AnalogCircuitDesigner extends CircuitDesigner {
         let batteryCount: number = 1;
         let resistorCount: number = 1;
         let capacitorCount: number = 1;
+        let inductorCount: number = 1;
 
         //Iterate through the objects array. The line format is different for each possible component.
         //Note that the ground component is not explicitly defined in the netlist. It is instead represented as the node value 0.
@@ -409,6 +410,17 @@ export class AnalogCircuitDesigner extends CircuitDesigner {
                 let temp: Capacitor = this.objects[i] as Capacitor;
                 result += "c" + capacitorCount + " " + this.nodeString(NetNodes[i].nvals) + " " + temp.getCapacitance() + "u ic=0\n";
                 ++capacitorCount;
+            }
+
+            //Inductor
+            //Example: i1 1 2 10m il=0
+            //The inductance value stored in the Inductor class is assumed to be in millihenrys
+            //The last argument is an optional value for initial voltage in the inductor.
+            //  This value has not yet been implemented. By default, il = 0.
+            else if(this.objects[i].getName() == "Inductor") {
+                let temp: Inductor = this.objects[i] as Inductor;
+                result += "i" + inductorCount + " " + this.nodeString(NetNodes[i].nvals) + " " + temp.getInductance() + "m il=0\n";
+                ++inductorCount;
             }
         }
 

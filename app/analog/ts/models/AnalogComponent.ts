@@ -21,6 +21,7 @@ export abstract class AnalogComponent extends Component {
     public voltage: number;
     public current: number;
     public resistance: number;
+    public inductance: number;
 
     protected constructor(portCount: ClampedValue, size: Vector, positioner?: Positioner<AnalogPort>) {
         super(size);
