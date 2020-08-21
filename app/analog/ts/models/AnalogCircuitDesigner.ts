@@ -357,7 +357,7 @@ export class AnalogCircuitDesigner extends CircuitDesigner {
 
     //When adding a new component to the netlist parser, do the following:
     // - Add a new counter variable for the naming convention
-    // - Add an elseiif statement to all the others in the for loop. 
+    // - Add an else-if statement to all the others in the for loop.
     //      You should (hopefully) be fine if you copy-paste a pre-existing else-if statement. Just triple-check that all variables were changed appropriately!
     private stringifyNetList(NetNodes: { name:string, xpos:number, ypos:number, nvals:number[]}[]): string {
         //First line is always the title of the netlist
@@ -413,7 +413,19 @@ export class AnalogCircuitDesigner extends CircuitDesigner {
             //  This value has not yet been implemented. By default, ic = 0.
             // else if(this.objects[i].getName() == "Capacitor") {
             //     let temp: Capacitor = this.objects[i] as Capacitor;
-            //     result += "c" + 1 + " " + this.nodeString(NetNodes[i].nvals, false) + " " + temp.getCapacitance() + "u ic=0\n";
+            //     result += "c" + capacitorCount + " " + this.nodeString(NetNodes[i].nvals) + " " + temp.getCapacitance() + "u ic=0\n";
+            //     ++capacitorCount;
+            // }
+
+            //Inductor
+            //Example: i1 1 2 10m il=0
+            //The inductance value stored in the Inductor class is assumed to be in millihenrys
+            //The last argument is an optional value for initial voltage in the inductor.
+            //  This value has not yet been implemented. By default, il = 0.
+            // else if(this.objects[i].getName() == "Inductor") {
+            //     let temp: Inductor = this.objects[i] as Inductor;
+            //     result += "i" + inductorCount + " " + this.nodeString(NetNodes[i].nvals) + " " + temp.getInductance() + "m il=0\n";
+            //     ++inductorCount;
             // }
         }
 
@@ -472,6 +484,10 @@ export class AnalogCircuitDesigner extends CircuitDesigner {
         else if (batteryIndex > -1) {
             NetNodes[batteryIndex].nvals[0] = 0;
         }
+        //No ground or battery was given! The circuit needs one of these to act as a ground
+        else {
+            return "ERROR: A circuit must have at least 1 battery and/or ground component to act as the ground\n";
+        }
 
         
         //objects[0].ports.currentPorts[0].connections[0].p2.parent.name
@@ -500,9 +516,20 @@ export class AnalogCircuitDesigner extends CircuitDesigner {
     private updateNetList(): void {
         this.netlist = [];
         let temp: string = this.giveNetList();
+        //If the netlist generation returns an error, don't update this.netlist
+        if (temp.substring(0, 5) == "ERROR") {
+            console.log("netlist error");
+            return null;
+        }
+
         this.netlist = temp.split("\n");
-        
-        console.log("netlist updated\n" + temp);
+        //this.netlist.push("test array");
+        //this.netlist.push("V1 1 0 1");
+        //this.netlist.push("R1 1 2 1");
+        //this.netlist.push("C1 2 0 1 ic=0");
+        //this.netlist.push(".tran 10u 3 uic");
+        //this.netlist.push(".end");
+        console.log("netlist updated");
     }
 
     public startSimulation(): void {

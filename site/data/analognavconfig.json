@@ -40,6 +40,11 @@
           "id": "Ground",
           "label": "Ground",
           "icon": "ground.svg"
+        },
+        {
+          "id": "Inductor",
+          "label": "Inductor",
+          "icon": "inductor.svg"
         }
       ]
     }

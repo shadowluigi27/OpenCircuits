@@ -14,6 +14,7 @@ import {PositionPopupModule} from "site/shared/selectionpopup/PositionPopupModul
 import {ResistancePopupModule} from "./selectionpopup/ResistancePopupModule";
 import {VoltagePopupModule} from "./selectionpopup/VoltagePopupModule";
 import {CapacitancePopupModule} from "./selectionpopup/CapacitancePopupModule";
+import {InductancePopupModule} from "./selectionpopup/InductancePopupModule";
 
 import {MainDesignerView} from "site/analog/views/MainDesignerView";
 import {ThumbnailGenerator} from "site/shared/utils/ThumbnailGenerator";
@@ -43,7 +44,8 @@ export class AnalogCircuitController extends MainDesignerController {
             new PositionPopupModule(this),
             new ResistancePopupModule(this),
             new VoltagePopupModule(this),
-            new CapacitancePopupModule(this)
+            new CapacitancePopupModule(this),
+            new InductancePopupModule(this)
         );
 
         this.contextMenu = new ContextMenuController(this);
