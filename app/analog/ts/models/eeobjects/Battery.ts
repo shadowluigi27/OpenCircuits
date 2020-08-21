@@ -6,9 +6,10 @@ import {V} from "Vector";
 import {ClampedValue} from "math/ClampedValue";
 
 import {AnalogComponent} from "analog/models/AnalogComponent";
+import { NetlistComponent } from "../NetlistComponent";
 
 @serializable("Battery")
-export class Battery extends AnalogComponent {
+export class Battery extends NetlistComponent {
     public constructor(voltage: number = 5) {
         super(new ClampedValue(2), V(50, 50));
 
@@ -39,5 +40,13 @@ export class Battery extends AnalogComponent {
         if (newVoltage > 0) {
             this.voltage = newVoltage;
         }
+    }
+
+    public getNetlistSymbol(): string {
+        return "v" + this.netlistNum;
+    }
+
+    public getNetListStats(): string {
+        return " dc " + this.getVoltage();
     }
 }

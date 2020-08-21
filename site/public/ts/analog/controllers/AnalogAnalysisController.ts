@@ -16,7 +16,8 @@ export class AnalogAnalysisController {
     public constructor(designer: AnalogCircuitDesigner) {
         this.designer = designer;
         this.startButton.click(async () => {
-            this.designer.startSimulation();
+            if (this.designer.getAll().length > 0)
+                this.designer.startSimulation();
             });
     }
 

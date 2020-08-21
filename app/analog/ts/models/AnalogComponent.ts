@@ -18,6 +18,10 @@ export abstract class AnalogComponent extends Component {
     @serialize
     protected ports: PortSet<AnalogPort>;
 
+    // used to identify this component in a netlist for analysis
+    // should be different for all other components of this type
+    public netlistNum: number;
+
     public voltage: number;
     public current: number;
     public resistance: number;

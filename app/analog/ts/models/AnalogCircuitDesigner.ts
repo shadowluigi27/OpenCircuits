@@ -11,6 +11,7 @@ import {AnalogComponent} from "./AnalogComponent";
 import {AnalogWire} from "./AnalogWire";
 import {AnalogPort} from "./ports/AnalogPort";
 import { Battery, Resistor, Capacitor } from "./eeobjects";
+import { NetlistComponent } from "./NetlistComponent";
 
 @serializable("AnalogCircuitDesigner")
 export class AnalogCircuitDesigner extends CircuitDesigner {
@@ -335,18 +336,17 @@ export class AnalogCircuitDesigner extends CircuitDesigner {
     //Returns a string listing all the node values with an entry of NetNodes.
     //Input the index of the NetNodes array, and the NetNodes array itself.
     //Note that the string will not end with a " " character
-    private nodeString(nvals:number[]): string {
+    private nodeString(nvals:number[], reverse: boolean): string {
+        if (reverse) {
+            nvals.reverse();
+        }
         let result: string = "";
         for (let i: number = 0; i < nvals.length; ++i) {
+            result += nvals[i];
             if (i < nvals.length - 1) {
-                result += nvals[i] + " ";
+                result += " ";
             }
-            else {
-                result += nvals[i];
-            }
-            
         }
-
         return result;
     }
 
@@ -369,47 +369,52 @@ export class AnalogCircuitDesigner extends CircuitDesigner {
         //----------------------------------------------------------------
         //result += ".SUBCKT OpenCircuits\n";
 
-        //A bunch of counter variables for each component. Used to properly name each on in the netlist.
-        let batteryCount: number = 1;
-        let resistorCount: number = 1;
-        let capacitorCount: number = 1;
-
         //Iterate through the objects array. The line format is different for each possible component.
         //Note that the ground component is not explicitly defined in the netlist. It is instead represented as the node value 0.
         //  If a port has node value 0, it is connected to a ground.
         for (let i: number = 0; i < this.objects.length; ++i) {
+            let object: NetlistComponent;
+            if (!(this.objects[i] instanceof NetlistComponent))
+                continue;
+            object = this.objects[i] as NetlistComponent;
+            // This will set the net list numbers to larger values than necessary, but should still be functional
+            object.setNetlistNumber(i);
+
+            result += object.getNetlistSymbol() + " "
+                + this.nodeString(NetNodes[i].nvals, (object instanceof Battery)) + " "
+                + object.getNetListStats() + "\n";
+
             //Voltage battery
             //Example: v1 1 0 dc 10
-            if (this.objects[i].getName() == "Battery") {
-                //Needs to be cast to the Battery object in order to use the getVoltage() function
-                let temp: Battery = this.objects[i] as Battery;
+            // if (this.objects[i].getName() == "Battery") {
+            //     //Needs to be cast to the Battery object in order to use the getVoltage() function
+            //     let temp: Battery = this.objects[i] as Battery;
 
-                //Special case: As the order of the node values printed matters for a battery, the nvals array inputted into nodeString must be reversed
-                let tempNVals: number[] = [NetNodes[i].nvals[1], NetNodes[i].nvals[0]];
+            //     //Special case: As the order of the node values printed matters for a battery, the nvals array inputted into nodeString must be reversed
+            //     let tempNVals: number[] = [NetNodes[i].nvals[1], NetNodes[i].nvals[0]];
                 
-                result += "v" + batteryCount + " " + this.nodeString(tempNVals) + " dc " + temp.getVoltage() + "\n";
-                ++batteryCount;
-            }
+            //     result += this.nodeString(tempNVals, false) + " dc " + temp.getVoltage() + "\n";
+            //     console.log(this.nodeString(tempNVals, false));
+            //     console.log(this.nodeString(tempNVals, true));
+            // }
 
             //Resistor
             //Example: r1 2 0 3.3k
-            //The resistance value stored in the Resistor class is assumed to be in kilo-ohms
-            else if(this.objects[i].getName() == "Resistor") {
-                let temp: Resistor = this.objects[i] as Resistor;
-                result += "r" + resistorCount + " " + this.nodeString(NetNodes[i].nvals) + " " + temp.getResistance() + "k\n";
-                ++resistorCount;
-            }
+            // The resistance value stored in the Resistor class is assumed to be in kilo-ohms
+            // else if(this.objects[i].getName() == "Resistor") {
+            //     let temp: Resistor = this.objects[i] as Resistor;
+            //     result += "r" + 1 + " " + this.nodeString(NetNodes[i].nvals, false) + " " + temp.getResistance() + "k\n";
+            // }
 
             //Capacitor
             //Example: c1 1 2 47u ic=0
             //The capacitance value stored in the Capacitor class is assumed to be in micro-farads
             //The last argument is an optional value for initial voltage in the capacitor.
             //  This value has not yet been implemented. By default, ic = 0.
-            else if(this.objects[i].getName() == "Capacitor") {
-                let temp: Capacitor = this.objects[i] as Capacitor;
-                result += "c" + capacitorCount + " " + this.nodeString(NetNodes[i].nvals) + " " + temp.getCapacitance() + "u ic=0\n";
-                ++capacitorCount;
-            }
+            // else if(this.objects[i].getName() == "Capacitor") {
+            //     let temp: Capacitor = this.objects[i] as Capacitor;
+            //     result += "c" + 1 + " " + this.nodeString(NetNodes[i].nvals, false) + " " + temp.getCapacitance() + "u ic=0\n";
+            // }
         }
 
         //----------------------------------------------------------------
@@ -496,14 +501,8 @@ export class AnalogCircuitDesigner extends CircuitDesigner {
         this.netlist = [];
         let temp: string = this.giveNetList();
         this.netlist = temp.split("\n");
-
-        //this.netlist.push("test array");
-        //this.netlist.push("V1 1 0 1");
-        //this.netlist.push("R1 1 2 1");
-        //this.netlist.push("C1 2 0 1 ic=0");
-        //this.netlist.push(".tran 10u 3 uic");
-        //this.netlist.push(".end");
-        console.log("netlist updated");
+        
+        console.log("netlist updated\n" + temp);
     }
 
     public startSimulation(): void {

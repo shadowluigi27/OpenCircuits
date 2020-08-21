@@ -6,9 +6,10 @@ import {V} from "Vector";
 import {ClampedValue} from "math/ClampedValue";
 
 import {AnalogComponent} from "analog/models/AnalogComponent";
+import { NetlistComponent } from "../NetlistComponent";
 
 @serializable("Resistor")
-export class Resistor extends AnalogComponent {
+export class Resistor extends NetlistComponent {
     public constructor(resistance: number = 5) {
         super(new ClampedValue(2), V(50, 30));
 
@@ -37,5 +38,13 @@ export class Resistor extends AnalogComponent {
         if (newResistance > 0) {
             this.resistance = newResistance;
         }
+    }
+
+    public getNetlistSymbol(): string {
+        return "v" + this.netlistNum;
+    }
+
+    public getNetListStats(): string {
+        return this.getResistance() + "k";
     }
 }

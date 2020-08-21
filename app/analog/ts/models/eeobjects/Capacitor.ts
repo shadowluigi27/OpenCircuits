@@ -19,7 +19,6 @@ export class Capacitor extends AnalogComponent {
         this.capacitance = capacitance;
         this.resistance = 0;
 
-        // copied from Resistor.ts
         this.ports.getPorts()[0].setOriginPos(V(this.getSize().x/2, 0));
         this.ports.getPorts()[0].setTargetPos(V(IO_PORT_LENGTH, 0));
 
@@ -43,5 +42,13 @@ export class Capacitor extends AnalogComponent {
         if (newCapacitance > 0) {
             this.capacitance = newCapacitance;
         }
+    }
+
+    public getNetlistSymbol(): string {
+        return "v" + this.netlistNum;
+    }
+
+    public getNetListStats(): string {
+        return this.getCapacitance() + "u ic=0";
     }
 }
