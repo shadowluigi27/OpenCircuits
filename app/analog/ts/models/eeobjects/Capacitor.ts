@@ -45,7 +45,7 @@ export class Capacitor extends AnalogComponent {
     }
 
     public getNetlistSymbol(): string {
-        return "v" + this.netlistNum;
+        return "C" + this.netlistNum;
     }
 
     public getNetListStats(): string {

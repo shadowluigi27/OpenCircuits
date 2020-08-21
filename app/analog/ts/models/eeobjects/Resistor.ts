@@ -41,7 +41,7 @@ export class Resistor extends NetlistComponent {
     }
 
     public getNetlistSymbol(): string {
-        return "v" + this.netlistNum;
+        return "R" + this.netlistNum;
     }
 
     public getNetListStats(): string {

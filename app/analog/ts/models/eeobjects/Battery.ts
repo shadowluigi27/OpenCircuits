@@ -43,7 +43,7 @@ export class Battery extends NetlistComponent {
     }
 
     public getNetlistSymbol(): string {
-        return "v" + this.netlistNum;
+        return "V" + this.netlistNum;
     }
 
     public getNetListStats(): string {
