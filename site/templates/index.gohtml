@@ -38,6 +38,22 @@
         {{ end }}
     </head>
     <body>
+        <style>
+            .Browser_Warning_Message {
+                background-color: lightblue;
+                text-align: center;
+            }
+        </style>
+        <div id="Browser-Warning-Message" class="Browser_Warning_Message">
+            <h1>Your Browser may not be supported.</h1>
+            <h2>Try switching to Chrome, Firefox, Microsoft Edge or updateing your browser</h2>
+            <button onclick="removeElement()">Remove</button>
+        </div>
+        <script>
+            function removeElement() {
+                document.getElementById("Browser-Warning-Message").style.display = "none";
+            }    
+        </script> 
         <div id="loading-screen" class="loading__screen">
             <div class="loading__screen__background"></div>
             <img class="loading__screen__logo" src="img/icons/logo.svg"/>
