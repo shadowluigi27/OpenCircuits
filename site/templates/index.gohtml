@@ -37,23 +37,82 @@
             {{ $a }}
         {{ end }}
     </head>
-    <body>
-        <style>
+    <body onload="isValidBrowser()">
+         <style>
+            *{
+                margin:0;
+                padding:0
+            }
             .Browser_Warning_Message {
-                background-color: lightblue;
+                display: none;
+                background-color: white;
                 text-align: center;
+                 z-index: 99999;
+            }
+            .top_right {
+                margin: 0;
+                position: absolute;
+                top: 20%;
+                left: 80%;
             }
         </style>
         <div id="Browser-Warning-Message" class="Browser_Warning_Message">
-            <h1>Your Browser may not be supported.</h1>
-            <h2>Try switching to Chrome, Firefox, Microsoft Edge or updateing your browser</h2>
-            <button onclick="removeElement()">Remove</button>
+               <h1 style ="color:black">Your Browser may not be supported.</h1>
+            <h2 style ="color:black">Try switching to Chrome, Firefox, Microsoft Edge or updateing your browser</h2>
+            <button onclick="removeElement()">X</button>
+            
         </div>
+        <script>
+            function isValidBrowser() {
+                var userAgent = navigator.userAgent;
+                var Is_IExplorerAgent = userAgent.indexOf("MSIE") > -1 || userAgent.indexOf("rv:") > -1; 
+                if(Is_IExplorerAgent)
+                {
+                    document.getElementById("Browser-Warning-Message").style.display = "none";
+                }
+                var index;
+                var browser_version;
+                if(index = userAgent.indexOf("Chrome") > -1)
+                {
+                    browser_version = userAgent.substring(index+7);
+                    if(parseFloat(browser_version) > 86)
+                    {
+                        document.getElementById("Browser-Warning-Message").style.display = "none";
+                    }
+                }
+                if(index = userAgent.indexOf("Firefox") > -1)
+                {   
+                    browser_version = userAgent.substring(index+8);
+                    if(/*parseFloat(browser_version) > 82*/true)
+                    {
+                        document.getElementById("Browser-Warning-Message").style.display = "block";
+                    }
+                }
+                if(index = userAgent.indexOf("Safari") > 10)
+                {
+                    browser_version = userAgent.substring(index+8);
+                    if(parseFloat(browser_version) > 13)
+                    {
+                        document.getElementById("Browser-Warning-Message").style.display = "none";
+                    }
+                }
+                if(index = userAgent.indexOf("OP") > -1)
+                {
+                    index =  userAgent.indexOf("version");
+                    browser_version = userAgent.substring(index+8);
+                    if(parseFloat(browser_version) >72)
+                    {
+                        document.getElementById("Browser-Warning-Message").style.display = "none";
+                    }
+                }
+            }    
+        </script> 
         <script>
             function removeElement() {
                 document.getElementById("Browser-Warning-Message").style.display = "none";
-            }    
+            }   
         </script> 
+        
         <div id="loading-screen" class="loading__screen">
             <div class="loading__screen__background"></div>
             <img class="loading__screen__logo" src="img/icons/logo.svg"/>
