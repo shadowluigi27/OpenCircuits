@@ -8,9 +8,11 @@ import Data from "site/data/digitalnavconfig.json";
 import {Create} from "serialeazy";
 import { data } from "jquery";
 export class ReplaceController extends DesignerController {
+    
     public show(objs: IOObject[]): void{
 
     }
+    //this takes in the item and output its the item's ID. I'm not sure what the type the ID is
     public getID(item): string {
         if(item.id){
             return item.id;

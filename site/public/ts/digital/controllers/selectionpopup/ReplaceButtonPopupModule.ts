@@ -6,7 +6,7 @@ import {MainDesignerController} from "../../../shared/controllers/MainDesignerCo
 import {ReplaceController} from "../ReplaceController";
 import {SelectionPopupModule} from "../../../shared/selectionpopup/SelectionPopupModule";
 
-export class ICButtonPopupModule extends SelectionPopupModule {
+export class ReplacePopupModule extends SelectionPopupModule {
     private RController: ReplaceController;
 
     public constructor(circuitController: MainDesignerController, RController: ReplaceController) {
@@ -27,9 +27,19 @@ export class ICButtonPopupModule extends SelectionPopupModule {
             this.setEnabled(false);
             return;
         }
-        else{
-            this.setEnabled(true);
+        this.setEnabled(true);
+        /*const selections = this.circuitController.getSelections();
+        const componentSelections = selections.filter(o => o instanceof Component) as Component[];
+        if (componentSelections.length != selections.length) {
+            this.setEnabled(false);
+            return;
         }
+
+        // Check if the selections are a valid IC
+        const enable = ICData.IsValid(componentSelections);
+
+        // Enable/disable the button
+        this.setEnabled(false);*/
     }
 
     public push(): void {

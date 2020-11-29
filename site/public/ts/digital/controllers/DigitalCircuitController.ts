@@ -32,6 +32,10 @@ import {DigitalCircuitView} from "../views/DigitalCircuitView";
 import {DigitalItemNavController} from "./DigitalItemNavController";
 import {CircuitMetadata} from "core/models/CircuitMetadata";
 
+//replace stuff
+import {ReplacePopupModule} from "site/digital/controllers/selectionpopup/ReplaceButtonPopupModule";
+import {ReplaceController} from"site/digital/controllers/ReplaceController";
+
 export class DigitalCircuitController extends MainDesignerController {
     private icController: ICDesignerController;
     private icViewer: ICViewerController;
@@ -39,6 +43,7 @@ export class DigitalCircuitController extends MainDesignerController {
     private copyController: DigitalCopyController;
     private sideNav: SideNavController;
     private loginController: LoginController;
+    private Replace: ReplaceController;
 
     protected designer: DigitalCircuitDesigner;
     protected itemNav: DigitalItemNavController;
@@ -67,6 +72,7 @@ export class DigitalCircuitController extends MainDesignerController {
             new ICViewerButtonPopupModule(this, this.icViewer),
             new BusButtonPopupModule(this),
             new SegmentCountPopupModule(this),
+            new ReplacePopupModule(this, this.Replace),
         );
 
         this.copyController = new DigitalCopyController(this);
