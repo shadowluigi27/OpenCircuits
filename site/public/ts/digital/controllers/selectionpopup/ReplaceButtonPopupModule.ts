@@ -28,18 +28,6 @@ export class ReplacePopupModule extends SelectionPopupModule {
             return;
         }
         this.setEnabled(true);
-        /*const selections = this.circuitController.getSelections();
-        const componentSelections = selections.filter(o => o instanceof Component) as Component[];
-        if (componentSelections.length != selections.length) {
-            this.setEnabled(false);
-            return;
-        }
-
-        // Check if the selections are a valid IC
-        const enable = ICData.IsValid(componentSelections);
-
-        // Enable/disable the button
-        this.setEnabled(false);*/
     }
 
     public push(): void {
