@@ -7,8 +7,21 @@ import {DesignerController} from "site/shared/controllers/DesignerController";
 import Data from "site/data/digitalnavconfig.json";
 import {Create} from "serialeazy";
 import { data } from "jquery";
+import { DigitalCircuitController } from "./DigitalCircuitController";
+import { DigitalCircuitDesigner } from "digital/models";
+import { replaceView } from "../views/replaceView";
+
 export class ReplaceController extends DesignerController {
-    
+    protected designer: DigitalCircuitDesigner;
+    protected view: replaceView;
+
+    private mainController: DigitalCircuitController;
+
+    public constructor(mainController: DigitalCircuitController){
+        super(new DigitalCircuitDesigner(1, () => this.render()), new replaceView());
+
+        this.mainController = mainController;
+    }
     public show(objs: Component[]): void{
     
     }
