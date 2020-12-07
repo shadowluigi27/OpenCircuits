@@ -47,64 +47,60 @@
                 display: none;
                 background-color: white;
                 text-align: center;
-                 z-index: 99999;
-            }
-            .top_right {
-                margin: 0;
-                position: absolute;
-                top: 20%;
-                left: 80%;
             }
         </style>
         <div id="Browser-Warning-Message" class="Browser_Warning_Message">
                <h1 style ="color:black">Your Browser may not be supported.</h1>
             <h2 style ="color:black">Try switching to Chrome, Firefox, Microsoft Edge or updateing your browser</h2>
-            <button onclick="removeElement()">X</button>
+            <button onclick="removeElement()">Remove</button>
             
         </div>
         <script>
             function isValidBrowser() {
                 var userAgent = navigator.userAgent;
-                var Is_IExplorerAgent = userAgent.indexOf("MSIE") > -1 || userAgent.indexOf("rv:") > -1; 
-                if(Is_IExplorerAgent)
-                {
-                    document.getElementById("Browser-Warning-Message").style.display = "none";
-                }
                 var index;
                 var browser_version;
-                if(index = userAgent.indexOf("Chrome") > -1)
+                if(userAgent.indexOf("MSIE") != -1)
+                {
+                    document.getElementById("Browser-Warning-Message").style.display = "block";
+                }
+                index = userAgent.indexOf("Chrome");
+                if(index != -1)
                 {
                     browser_version = userAgent.substring(index+7);
-                    if(parseFloat(browser_version) > 86)
-                    {
-                        document.getElementById("Browser-Warning-Message").style.display = "none";
-                    }
-                }
-                if(index = userAgent.indexOf("Firefox") > -1)
-                {   
-                    browser_version = userAgent.substring(index+8);
-                    if(/*parseFloat(browser_version) > 82*/true)
+                    if(parseFloat(browser_version) <= 48)
                     {
                         document.getElementById("Browser-Warning-Message").style.display = "block";
                     }
                 }
-                if(index = userAgent.indexOf("Safari") > 10)
-                {
+                index = userAgent.indexOf("Firefox");
+                if(index != -1)
+                {   
                     browser_version = userAgent.substring(index+8);
-                    if(parseFloat(browser_version) > 13)
+                    if(parseFloat(browser_version) < 40)
                     {
-                        document.getElementById("Browser-Warning-Message").style.display = "none";
+                        document.getElementById("Browser-Warning-Message").style.display = "block";
                     }
                 }
-                if(index = userAgent.indexOf("OP") > -1)
+                index = userAgent.indexOf("Safari");
+                if(index != -1)
+                {
+                    browser_version = userAgent.substring(index+8);
+                    if(parseFloat(browser_version) < 13)
+                    {
+                        document.getElementById("Browser-Warning-Message").style.display = "block";
+                    }
+                }
+                index = userAgent.indexOf("OP");
+                if(index != -1)
                 {
                     index =  userAgent.indexOf("version");
                     browser_version = userAgent.substring(index+8);
-                    if(parseFloat(browser_version) >72)
+                    if(parseFloat(browser_version) <= 26)
                     {
-                        document.getElementById("Browser-Warning-Message").style.display = "none";
+                        document.getElementById("Browser-Warning-Message").style.display = "block";
                     }
-                }
+                } 
             }    
         </script> 
         <script>
