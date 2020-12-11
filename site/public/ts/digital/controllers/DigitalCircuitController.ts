@@ -61,6 +61,7 @@ export class DigitalCircuitController extends MainDesignerController {
         this.icController = new ICDesignerController(this);
         this.icViewer = new ICViewerController(this);
 
+        this.Replace = new ReplaceController(this);
         this.selectionPopup.addModules(
             new TitlePopupModule(this),
             new PositionPopupModule(this),

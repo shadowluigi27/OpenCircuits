@@ -1,29 +1,47 @@
-import { SelectAction } from "core/actions/selection/SelectAction";
 import { Component, IOObject } from "core/models";
-import { GetAllPorts } from "core/utils/ComponentUtils";
+import { GetAllPorts, IOObjectSet } from "core/utils/ComponentUtils";
 import { InputPort } from "digital/models/ports/InputPort";
 import { OutputPort } from "digital/models/ports/OutputPort";
 import {DesignerController} from "site/shared/controllers/DesignerController";
 import Data from "site/data/digitalnavconfig.json";
 import {Create} from "serialeazy";
-import { data } from "jquery";
 import { DigitalCircuitController } from "./DigitalCircuitController";
 import { DigitalCircuitDesigner } from "digital/models";
 import { replaceView } from "../views/replaceView";
 
 export class ReplaceController extends DesignerController {
-    protected designer: DigitalCircuitDesigner;
     protected view: replaceView;
 
     private mainController: DigitalCircuitController;
-
+    private CompatibleComponents: Component[];
+    
     public constructor(mainController: DigitalCircuitController){
         super(new DigitalCircuitDesigner(1, () => this.render()), new replaceView());
 
         this.mainController = mainController;
     }
     public show(objs: Component[]): void{
+        
+            this.setActive(true);
     
+            // Find compatible components
+            this.CompatibleComponents = objs;
+    
+            // Reset designer and add the internal components
+            this.designer.reset();
+            //this.designer.addGroup(this.CompatibleComponents);
+
+
+            this.view.show();
+    
+            // Render
+            this.render();
+            this.mainController.setActive(false);
+        
+        /*this.setActive(true);
+        this.view.show();
+        this.render();
+        this.mainController.setActive(false);*/
     }
     //this takes in the item and output its the item's ID. I'm not sure what the type the ID is
     public getID(item): string {
@@ -46,7 +64,7 @@ export class ReplaceController extends DesignerController {
         const inputs = ports.filter(o => o instanceof InputPort);
         const outputs = ports.filter(o => o instanceof OutputPort);
         //Get the Data and then filter it so we can get the component IDs
-        const DataSection = Data.sections; 
+        const DataSection = Data.sections;
         //Within the sections, we need the items
         const componentItems = Array.from(DataSection, x => x.items);
         //Within the items, we need its ID
@@ -57,7 +75,7 @@ export class ReplaceController extends DesignerController {
         //outputPorts
         const CompatibleComponents = ComponentList.filter(o => (o.getPorts().filter(x => x instanceof InputPort).length == inputs.length
                                                                 && o.getPorts().filter(x => x instanceof OutputPort).length == outputs.length));
-        return CompatibleComponents; 
+        return CompatibleComponents;
     }
     protected createComponent(uuid: string): Component {
         return Create<Component>(uuid);
