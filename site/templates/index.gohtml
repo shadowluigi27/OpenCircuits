@@ -47,11 +47,15 @@
                 display: none;
                 background-color: white;
                 text-align: center;
+                z-index: 9999;
+            }
+            .content {
+                display: none;
             }
         </style>
         <div id="Browser-Warning-Message" class="Browser_Warning_Message">
                <h1 style ="color:black">Your Browser may not be supported.</h1>
-            <h2 style ="color:black">Try switching to Chrome, Firefox, Microsoft Edge or updateing your browser</h2>
+            <h2 style ="color:black">Try switching to Chrome, Firefox, Microsoft Edge or updating your browser</h2>
             <button onclick="removeElement()">Remove</button>
             
         </div>
@@ -60,52 +64,64 @@
                 var userAgent = navigator.userAgent;
                 var index;
                 var browser_version;
-                if(userAgent.indexOf("MSIE") != -1)
+                if(userAgent.indexOf("MSIE") != -1 || userAgent.indexOf("Trident"))
                 {
                     document.getElementById("Browser-Warning-Message").style.display = "block";
                 }
-                index = userAgent.indexOf("Chrome");
-                if(index != -1)
+                else if(userAgent.indexOf("Chrome") != -1 && userAgent.indexOf("OPR") == -1)
                 {
-                    browser_version = userAgent.substring(index+7);
+                    index = userAgent.indexOf("Chrome");
+                    browser_version = userAgent.substring(index+7,index+11);
                     if(parseFloat(browser_version) <= 48)
                     {
                         document.getElementById("Browser-Warning-Message").style.display = "block";
                     }
+                    else
+                        document.getElementById("content").style.display = "block";
                 }
-                index = userAgent.indexOf("Firefox");
-                if(index != -1)
+                else if(userAgent.indexOf("Firefox") != -1)
                 {   
-                    browser_version = userAgent.substring(index+8);
+                    index = userAgent.indexOf("Firefox");
+                    browser_version = userAgent.substring(index+8,index+12);
                     if(parseFloat(browser_version) < 40)
                     {
                         document.getElementById("Browser-Warning-Message").style.display = "block";
                     }
+                    else
+                        document.getElementById("content").style.display = "block";
                 }
-                index = userAgent.indexOf("Safari");
-                if(index != -1)
+                else if(userAgent.indexOf("Safari") != -1 && userAgent.indexOf("OPR") == -1 && userAgent.indexOf("Chrome") == -1)
                 {
-                    browser_version = userAgent.substring(index+8);
-                    if(parseFloat(browser_version) < 13)
+                    index = userAgent.indexOf("Version");
+                    browser_version = userAgent.substring(index+8,index+12);
+                    if(parseFloat(browser_version) < 10)
                     {
                         document.getElementById("Browser-Warning-Message").style.display = "block";
                     }
+                    else
+                        document.getElementById("content").style.display = "block";
                 }
-                index = userAgent.indexOf("OP");
-                if(index != -1)
+                else if(userAgent.indexOf("OPR") != -1)
                 {
-                    index =  userAgent.indexOf("version");
-                    browser_version = userAgent.substring(index+8);
-                    if(parseFloat(browser_version) <= 26)
+                    index =  userAgent.indexOf("OPR");
+                    browser_version = userAgent.substring(index+4,index+8);
+                    if(parseFloat(browser_version) < 33)
                     {
                         document.getElementById("Browser-Warning-Message").style.display = "block";
                     }
+                    else
+                        document.getElementById("content").style.display = "block";
                 } 
+                else
+                {
+                    document.getElementById("content").style.display = "block";
+                }
             }    
         </script> 
         <script>
             function removeElement() {
                 document.getElementById("Browser-Warning-Message").style.display = "none";
+                document.getElementById("content").style.display = "block";
             }   
         </script> 
         
