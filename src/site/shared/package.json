@@ -11,6 +11,10 @@
   },
   "dependencies": {
     "app": "^0.0.2",
+    "canvg": "^3.0.6",
+    "core-js": "^3.6.0",
+    "dompurify": "^2.2.0",
+    "html2canvas": "^1.0.0-rc.5",
     "jspdf": "^2.3.0"
   },
   "peerDependencies": {
