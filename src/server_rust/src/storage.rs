@@ -1,12 +1,16 @@
-use crate::model::*;
 use std::boxed::Box;
 use std::fmt;
 use std::vec::Vec;
 
 use rocket::State;
 
-pub mod mem;
-pub mod sqlite;
+use crate::model::*;
+
+mod mem;
+mod sqlite;
+
+pub use mem::MemInterface as Mem;
+pub use sqlite::SqliteInterface as Sqlite;
 
 #[derive(Debug)]
 pub enum Error {

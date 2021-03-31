@@ -4,44 +4,32 @@
 extern crate rocket;
 
 use std::boxed::Box;
-use std::vec::Vec;
+use std::error::Error;
+
+use config::{Config, load_config};
 
 mod api;
 mod auth;
 mod model;
 mod storage;
 mod web;
+mod config;
 
-fn main() {
-    let mut auths: Vec<Box<dyn auth::AuthenticationMethod>> = std::vec::Vec::new();
-
-    // TODO: Use a json file or something for configuration, then check env vars for production
+fn main() -> Result<(), Box<dyn Error>> {
     let is_gcp = std::env::var("DATASTORE_PROJECT_ID").is_ok();
-
-    if std::env::var("NO_AUTH").is_ok() {
-        auths.push(Box::new(auth::no_auth::NoLoginAuthProvider::new()))
+    // When in production, it may be appropriate to force some config values
+    if is_gcp {
+        panic!("GCP not supported yet")
     }
 
-    let storage: Box<dyn storage::Interface> = if is_gcp {
-        panic!("GCP Not supported yet");
-    } else {
-        if let Ok(v) = std::env::var("STORAGE") {
-            match v.as_str() {
-                "sqlite" => Box::new(storage::sqlite::SqliteInterface::new("circuits.db").unwrap()),
-                "gcp_emu" => panic!("GCP Emulator not supported yet"),
-                _ => Box::new(storage::mem::MemInterface::new()),
-            }
-        } else {
-            Box::new(storage::mem::MemInterface::new())
-        }
-    };
-
-    let auth_manager = auth::AuthenticationManager::new(auths);
+    let cfg: Config = load_config("open_circuits.json")?;
+    let (storage, identifier) = cfg.make();
 
     rocket::ignite()
         .mount("/api", api::routes())
         .mount("/", web::routes())
-        .manage(auth_manager)
+        .manage(identifier)
         .manage(storage)
         .launch();
+    Ok(())
 }

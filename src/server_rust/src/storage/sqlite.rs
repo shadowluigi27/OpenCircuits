@@ -1,8 +1,9 @@
-use crate::model::*;
-use crate::storage::{Error, Interface, Result};
 use std::sync::{Arc, Mutex};
 
 use rusqlite::{Connection, NO_PARAMS};
+
+use crate::model::*;
+use crate::storage::{Error, Interface, Result};
 
 // NOTE: Sqlite is a developer-only feature and is volatile.
 //  No migrations will be supported

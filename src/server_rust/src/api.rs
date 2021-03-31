@@ -1,13 +1,13 @@
-mod circuits;
-
-use crate::auth::UserToken;
-
 use rocket::Route;
 use rocket_contrib::json::Json;
 
+use crate::auth::UserToken;
+
+mod circuits;
+
 #[get("/ping")]
 fn auth_ping(key: UserToken) -> Json<String> {
-    Json(format!("Ping successful for user id {:?}", key.id))
+    Json(format!("Ping successful for user id {:?}", key.0))
 }
 
 pub fn routes() -> Vec<Route> {

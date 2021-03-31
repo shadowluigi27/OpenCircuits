@@ -1,4 +1,4 @@
-use crate::auth::AuthenticationMethod;
+use crate::auth::Method;
 
 pub struct NoLoginAuthProvider {}
 
@@ -8,7 +8,7 @@ impl NoLoginAuthProvider {
     }
 }
 
-impl AuthenticationMethod for NoLoginAuthProvider {
+impl Method for NoLoginAuthProvider {
     fn extract_identity(&self, token: &str) -> Result<String, &'static str> {
         if token.is_empty() {
             Err("User id cannot be blank in no_auth")

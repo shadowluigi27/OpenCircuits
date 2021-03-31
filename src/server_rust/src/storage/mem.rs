@@ -1,8 +1,8 @@
-use crate::model::*;
-use crate::storage::{Error, Interface, Result};
-
 use std::collections::HashMap;
 use std::sync::{Arc, RwLock};
+
+use crate::model::*;
+use crate::storage::{Error, Interface, Result};
 
 struct MemDataInner {
     map: HashMap<CircuitId, Circuit>,

@@ -1,20 +1,18 @@
-use rocket_contrib::json::Json;
-
 use rocket::response::status::NotFound;
+use rocket_contrib::json::Json;
 
 use crate::auth::UserToken;
 use crate::model::*;
 use crate::storage::Storage;
 
-// TODO: loading the circuit metadata should happen in a guard,
-//  and access control should happen in a guard as well
+// TODO: loading the circuit metadata should happen in a guard
 fn load_circuit(s: &Storage, user: &UserToken, id: CircuitId) -> Result<Circuit, NotFound<()>> {
     let circuit = match s.load_circuit(id) {
         Ok(c) => c,
         Err(_) => return Err(NotFound(())),
     };
 
-    if circuit.metadata.owner != user.id {
+    if circuit.metadata.owner != *user.0 {
         return Err(NotFound(()));
     }
     Ok(circuit)
@@ -22,7 +20,7 @@ fn load_circuit(s: &Storage, user: &UserToken, id: CircuitId) -> Result<Circuit,
 
 #[get("/circuits")]
 pub fn enumerate(s: Storage, key: UserToken) -> Json<Vec<CircuitMetadata>> {
-    Json(s.enumerate_circuits(key.id).unwrap())
+    Json(s.enumerate_circuits(key.0).unwrap())
 }
 
 #[get("/circuits/<id>")]
@@ -33,7 +31,7 @@ pub fn get(s: Storage, user: UserToken, id: CircuitId) -> Result<Json<Circuit>, 
 #[post("/circuits", data = "<circuit>")]
 pub fn create(s: Storage, user: UserToken, circuit: Json<Circuit>) -> Json<CircuitMetadata> {
     let mut c: Circuit = circuit.clone();
-    c.metadata.owner = user.id;
+    c.metadata.owner = user.0;
 
     let c = s.new_circuit(c).unwrap();
     Json(c.metadata)

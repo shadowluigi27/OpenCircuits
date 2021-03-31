@@ -1,37 +1,34 @@
-pub mod no_auth;
-
 use rocket::http::Status;
 use rocket::request::{FromRequest, Request};
 use rocket::{Outcome, State};
 
 use crate::model::UserId;
 
-pub trait AuthenticationMethod: Send + Sync {
+mod no_auth;
+pub use no_auth::NoLoginAuthProvider as NoAuth;
+
+pub trait Method: Send + Sync {
     fn extract_identity(&self, token: &str) -> Result<String, &'static str>;
     fn auth_header_prefix(&self) -> &'static str;
 }
 
-pub struct AuthenticationManager {
-    auth_methods: Vec<Box<dyn AuthenticationMethod>>,
+pub struct IdentityDecoder {
+    auth_methods: Vec<Box<dyn Method>>,
 }
 
 #[derive(Debug)]
 pub enum ExtractAuthErr {
-    UnsupportedProvider,
+    UnsupportedMethod,
     Failed(&'static str),
 }
 
-impl AuthenticationManager {
-    pub fn new(methods: Vec<Box<dyn AuthenticationMethod>>) -> AuthenticationManager {
-        AuthenticationManager {
+impl IdentityDecoder {
+    pub fn new(methods: Vec<Box<dyn Method>>) -> IdentityDecoder {
+        IdentityDecoder {
             auth_methods: methods,
         }
     }
-    pub fn extract_identity(
-        &self,
-        auth_type: &str,
-        auth_id: &str,
-    ) -> Result<String, ExtractAuthErr> {
+    pub fn identify(&self, auth_type: &str, auth_id: &str) -> Result<String, ExtractAuthErr> {
         for auth in self.auth_methods.iter() {
             if auth.auth_header_prefix() == auth_type {
                 match auth.extract_identity(auth_id) {
@@ -40,13 +37,11 @@ impl AuthenticationManager {
                 }
             }
         }
-        Err(ExtractAuthErr::UnsupportedProvider)
+        Err(ExtractAuthErr::UnsupportedMethod)
     }
 }
 
-pub struct UserToken {
-    pub id: UserId,
-}
+pub struct UserToken(pub UserId);
 
 impl<'a, 'r> FromRequest<'a, 'r> for UserToken {
     type Error = ExtractAuthErr;
@@ -61,12 +56,12 @@ impl<'a, 'r> FromRequest<'a, 'r> for UserToken {
                 ExtractAuthErr::Failed("Single authType/authId required"),
             ))
         } else {
-            let auth_manager: State<AuthenticationManager> =
-                request.guard::<State<AuthenticationManager>>().unwrap();
+            let identifier: State<IdentityDecoder> =
+                request.guard::<State<IdentityDecoder>>().unwrap();
 
             // Extract the identity from the auth provider / ID pair
-            match auth_manager.extract_identity(auth_type[0], auth_id[0]) {
-                Ok(ident) => Outcome::Success(UserToken { id: ident }),
+            match identifier.identify(auth_type[0], auth_id[0]) {
+                Ok(ident) => Outcome::Success(UserToken(ident)),
                 Err(e) => Outcome::Failure((Status::BadRequest, e)),
             }
         }
