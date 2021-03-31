@@ -1,5 +1,5 @@
 const os = require("os");
-const {renameSync, existsSync, rmSync} = require("fs");
+const {renameSync, existsSync, rmdirSync} = require("fs");
 const {spawn} = require("child_process");
 
 const ora = require("ora");
@@ -21,9 +21,9 @@ const DIR_MAP = Object.fromEntries(DIRS.map(d => [d.value, d]));
 
 function build_server(prod) {
     return new Promise((resolve, reject) => {
-        // Copy go files to build folder
+        // Copy server files to build folder
         if (prod) {
-            copy_dir("src/server", "build")
+            copy_dir("src/server_rust", "build")
             resolve();
             return;
         }
@@ -31,8 +31,8 @@ function build_server(prod) {
         copy_dir("src/server/data/sql/sqlite", "build/sql/sqlite");
 
         const cmd = (os.platform() === "win32" ?
-                        "cd src/server && go build -o ../../build/server.exe" :
-                        "cd src/server && go build -o ../../build/server");
+                        "cd src/server_rust && cargo build --target-dir ../../build/" :
+                        "cd src/server_rust && cargo build --target-dir ../../build/ && cp ../../build/debug/server ../../build/server");
 
         spawn(cmd, {
             shell: true,
