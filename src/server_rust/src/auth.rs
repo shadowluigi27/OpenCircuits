@@ -5,7 +5,10 @@ use rocket::{Outcome, State};
 use crate::model::UserId;
 
 mod no_auth;
+mod google_oauth2;
+
 pub use no_auth::NoLoginAuthProvider as NoAuth;
+pub use google_oauth2::LoginProvider as GoogleOAuth2;
 
 pub trait Method: Send + Sync {
     fn extract_identity(&self, token: &str) -> Result<String, &'static str>;

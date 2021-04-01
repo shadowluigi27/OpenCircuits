@@ -6,7 +6,7 @@ use std::vec::Vec;
 
 use serde::{Deserialize, Serialize};
 
-use crate::auth::{IdentityDecoder, Method, NoAuth};
+use crate::auth::{GoogleOAuth2, IdentityDecoder, Method, NoAuth};
 use crate::storage::{GcpDs, Interface, Mem, Sqlite};
 
 #[derive(Serialize, Deserialize)]
@@ -58,7 +58,7 @@ impl AuthType {
     fn make(self) -> Box<dyn Method> {
         match self {
             Self::NoAuth => Box::new(NoAuth::new()),
-            Self::GoogleOAuth(_cfg) => panic!("Google oauth not supported yet"),
+            Self::GoogleOAuth(cfg) => Box::new(GoogleOAuth2::new(cfg).unwrap()),
         }
     }
 }
