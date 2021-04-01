@@ -1,117 +1,70 @@
 extern crate google_datastore1 as datastore1;
 extern crate hyper;
-extern crate hyper_rustls;
 extern crate yup_oauth2 as oauth2;
 
 use std::collections::{hash_map::RandomState, HashMap};
 use std::default::Default;
 use std::iter::FromIterator;
+use std::{error, fmt, result};
 
-use datastore1::{
-    BeginTransactionRequest, CommitRequest, Datastore, Entity, EntityResult, Filter, Key,
-    KindExpression, LookupRequest, Mutation, MutationResult, PathElement, PropertyFilter,
-    PropertyReference, Query, RunQueryRequest, Value,
-};
+use datastore1::{BeginTransactionRequest, Datastore, EntityResult, Key, MutationResult, Value};
 
 use crate::model::*;
-use crate::storage::{Error, Interface, Result};
+use crate::storage::{Error as SError, Interface, Result as SResult};
+
+mod requests;
+
+#[derive(Debug)]
+pub enum Error {
+    CircuitIdNotFound(CircuitId),
+    MissingKey,
+    MalformedKey(&'static str),
+    MissingEntity,
+    MalformedEntity(&'static str),
+    MissingTransaction,
+    MissingMutations,
+    UnexpectedMutations,
+    MissingResults,
+    UnexpectedResults,
+    ReqError(datastore1::Error),
+}
+
+impl fmt::Display for Error {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        (self as &dyn fmt::Debug).fmt(f)
+    }
+}
+impl error::Error for Error {
+    fn source(&self) -> Option<&(dyn error::Error + 'static)> {
+        match *self {
+            Error::ReqError(ref e) => Some(e),
+            _ => None,
+        }
+    }
+}
+impl Error {
+    fn wrap(self) -> SError {
+        match self {
+            Error::CircuitIdNotFound(id) => SError::CircuitIdNotFound(id),
+            a => SError::Internal(Box::new(a)),
+        }
+    }
+}
+pub type Result<T> = result::Result<T, Error>;
+
+fn get_id_from_key(key: Option<Key>) -> Result<String> {
+    key.ok_or(Error::MissingKey)?
+        .path
+        .ok_or(Error::MalformedKey("Missing path"))?
+        .get(0)
+        .ok_or(Error::MalformedKey("Missing path entry"))?
+        .id
+        .clone()
+        .ok_or(Error::MalformedKey("Missing id"))
+}
 
 // All places that need to be explicitly updated when the circuit model changes
 //  will be denoted with a CHANGE_ME tag
-
-fn get_req(id: CircuitId) -> LookupRequest {
-    LookupRequest {
-        keys: Some(vec![Key {
-            path: Some(vec![PathElement {
-                kind: Some(String::from("Circuit")),
-                id: Some(id),
-                name: None,
-            }]),
-            ..Key::default()
-        }]),
-        ..LookupRequest::default()
-    }
-}
-
-// TODO: This should exclude the circuit contents using Projection
-fn enum_req(user: &UserId) -> RunQueryRequest {
-    RunQueryRequest {
-        query: Some(Query {
-            filter: Some(Filter {
-                property_filter: Some(PropertyFilter {
-                    property: Some(PropertyReference {
-                        name: Some(String::from("Owner")),
-                    }),
-                    value: Some(Value {
-                        string_value: Some(user.clone()),
-                        ..Value::default()
-                    }),
-                    op: Some(String::from("EQUAL")),
-                }),
-                ..Filter::default()
-            }),
-            kind: Some(vec![KindExpression {
-                name: Some(String::from("Circuit")),
-            }]),
-            ..Query::default()
-        }),
-        ..RunQueryRequest::default()
-    }
-}
-
-fn put_req(c: &Circuit, t: String) -> CommitRequest {
-    let is_new = c.metadata.id.len() > 0;
-    let id = if is_new {
-        Some(c.metadata.id.clone())
-    } else {
-        None
-    };
-    let entity = Entity {
-        properties: Some(format_circuit(c.clone())),
-        key: Some(Key {
-            path: Some(vec![PathElement {
-                kind: Some(String::from("Circuit")),
-                id: id,
-                name: None,
-            }]),
-            ..Key::default()
-        }),
-    };
-    let mutation = if is_new {
-        Mutation {
-            update: Some(entity),
-            ..Mutation::default()
-        }
-    } else {
-        Mutation {
-            insert: Some(entity),
-            ..Mutation::default()
-        }
-    };
-    CommitRequest {
-        transaction: Some(t),
-        mutations: Some(vec![mutation]),
-        ..CommitRequest::default()
-    }
-}
-
-fn del_req(id: CircuitId, t: String) -> CommitRequest {
-    CommitRequest {
-        transaction: Some(t),
-        mutations: Some(vec![Mutation {
-            delete: Some(Key {
-                path: Some(vec![PathElement {
-                    kind: Some(String::from("Circuit")),
-                    id: Some(id),
-                    name: None,
-                }]),
-                ..Key::default()
-            }),
-            ..Mutation::default()
-        }]),
-        ..CommitRequest::default()
-    }
-}
 
 // CHANGE_ME when editing the model
 fn format_circuit(c: Circuit) -> HashMap<String, Value> {
@@ -138,28 +91,15 @@ fn format_circuit(c: Circuit) -> HashMap<String, Value> {
     )
 }
 
-fn get_id_from_key(key: Option<Key>) -> Result<CircuitId> {
-    key.ok_or(Error::BadResponse("GCP returned empty key"))?
-        .path
-        .ok_or(Error::BadResponse("GCP returned empty path"))?
-        .get(0)
-        .ok_or(Error::BadResponse("GCP returned empty path vec"))?
-        .id
-        .clone()
-        .ok_or(Error::BadResponse("GCP returned empty id"))
-}
-
 // CHANGE_ME when editing the model
 fn parse_circuit(result: EntityResult) -> Result<(CircuitMetadata, Option<String>)> {
-    let entity = result
-        .entity
-        .ok_or(Error::BadResponse("GCP returned empty entity"))?;
+    let entity = result.entity.ok_or(Error::MissingEntity)?;
 
     let id = get_id_from_key(entity.key)?;
 
     let props: HashMap<String, Value> = entity
         .properties
-        .ok_or(Error::BadResponse("GCP returned empty props"))?;
+        .ok_or(Error::MalformedEntity("Empty props"))?;
 
     let str_props: HashMap<&str, String, RandomState> = HashMap::from_iter(
         props
@@ -172,13 +112,14 @@ fn parse_circuit(result: EntityResult) -> Result<(CircuitMetadata, Option<String
     let parse_prop = |k: &str| -> Result<String> {
         Ok(str_props
             .get(k)
-            .ok_or(Error::BadResponse("GCP returned incomplete entry"))?
+            .ok_or(Error::MalformedEntity("Incomplete entry"))?
             .clone())
     };
+
     let metadata = CircuitMetadata {
         id: id,
         name: parse_prop("Name")?,
-        owner: parse_prop("Owner")?,
+        owner: parse_prop("Owner").unwrap_or_default(),
         desc: parse_prop("Desc")?,
         thumbnail: parse_prop("Thumbnail")?,
         version: parse_prop("Version")?,
@@ -187,12 +128,10 @@ fn parse_circuit(result: EntityResult) -> Result<(CircuitMetadata, Option<String
     Ok((metadata, contents))
 }
 
-fn unwrap_resp<S, T, E: std::error::Error + 'static>(
-    result: std::result::Result<(S, T), E>,
-) -> Result<T> {
+fn unwrap_resp<S, T>(result: result::Result<(S, T), datastore1::Error>) -> Result<T> {
     match result {
         Ok((_, res)) => Ok(res),
-        Err(e) => Err(Error::Other(e.into())),
+        Err(e) => Err(Error::ReqError(e)),
     }
 }
 
@@ -201,6 +140,25 @@ fn unwrap_resp<S, T, E: std::error::Error + 'static>(
 pub struct GcpDsInterface {
     project_id: String,
     datastore_url: Option<String>,
+    kind: String,
+}
+
+impl Interface for GcpDsInterface {
+    fn load_circuit(&self, id: CircuitId) -> SResult<Circuit> {
+        self.load_circuit_1(id).map_err(|e| e.wrap())
+    }
+    fn enumerate_circuits(&self, id: UserId) -> SResult<Vec<CircuitMetadata>> {
+        self.enumerate_circuits_1(id).map_err(|e| e.wrap())
+    }
+    fn update_circuit(&self, c: &Circuit) -> SResult<()> {
+        self.update_circuit_1(c).map_err(|e| e.wrap())
+    }
+    fn new_circuit(&self, c: Circuit) -> SResult<Circuit> {
+        self.new_circuit_1(c).map_err(|e| e.wrap())
+    }
+    fn delete_circuit(&self, id: CircuitId) -> SResult<()> {
+        self.delete_circuit_1(id).map_err(|e| e.wrap())
+    }
 }
 
 // The GCP datastore crate requires an auth provider, but that is not required
@@ -210,12 +168,12 @@ impl oauth2::GetToken for DummyAuth {
     fn token<'b, I, T>(
         &mut self,
         _: I,
-    ) -> std::result::Result<yup_oauth2::Token, Box<dyn std::error::Error>>
+    ) -> std::result::Result<oauth2::Token, Box<dyn std::error::Error>>
     where
         T: AsRef<str> + Ord + 'b,
         I: IntoIterator<Item = &'b T>,
     {
-        Ok(yup_oauth2::Token {
+        Ok(oauth2::Token {
             access_token: String::default(),
             refresh_token: String::default(),
             token_type: String::default(),
@@ -234,6 +192,7 @@ impl GcpDsInterface {
         GcpDsInterface {
             project_id: project_id,
             datastore_url: None,
+            kind: String::from("Circuit"),
         }
     }
 
@@ -242,6 +201,7 @@ impl GcpDsInterface {
         GcpDsInterface {
             project_id: project_id,
             datastore_url: Some(emu_url),
+            kind: String::from("Circuit"),
         }
     }
 
@@ -269,57 +229,70 @@ impl GcpDsInterface {
 
         let trans = unwrap_resp(result)?
             .transaction
-            .ok_or(Error::BadResponse("GCP failed to give transaction"))?;
+            .ok_or(Error::MissingTransaction)?;
         Ok((hub, trans))
     }
 
-    fn put(&self, c: &Circuit) -> Result<MutationResult> {
+    fn put_circuit(&self, c: &Circuit) -> Result<MutationResult> {
         let (hub, trans) = self.init_transaction()?;
+        let id = if c.metadata.id.len() > 0 {
+            Some(c.metadata.id.clone())
+        } else {
+            None
+        };
         let result = hub
             .projects()
-            .commit(put_req(c, trans), &self.project_id)
+            .commit(
+                requests::put_req(&self.kind, id, trans, format_circuit(c.clone())),
+                &self.project_id,
+            )
             .doit();
 
         match unwrap_resp(result)?.mutation_results {
             Some(v) if v.len() == 1 => Ok(v[0].clone()),
-            Some(_) => Err(Error::BadResponse("GCP returned non-empty mutation list")),
-            None => Err(Error::BadResponse("GCP returned no mutations")),
+            _ => Err(Error::MissingMutations),
         }
     }
-}
 
-impl Interface for GcpDsInterface {
-    fn load_circuit(&self, id: CircuitId) -> Result<Circuit> {
+    fn load_circuit_1(&self, id: CircuitId) -> Result<Circuit> {
         let hub = self.get_conn();
         let result = hub
             .projects()
-            .lookup(get_req(id.clone()), self.project_id.as_str())
+            .lookup(
+                requests::lookup_req(&self.kind, Some(id.clone()).into_iter()),
+                self.project_id.as_str(),
+            )
             .doit();
 
         let result = match unwrap_resp(result)?.found {
             Some(v) if v.len() == 1 => Ok(v[0].clone()),
-            Some(_) => Err(Error::BadResponse(
-                "GCP returned unexpected non-empty result list",
-            )),
+            Some(_) => Err(Error::UnexpectedResults),
             None => Err(Error::CircuitIdNotFound(id)),
         }?;
 
         let (md, contents) = parse_circuit(result)?;
         Ok(Circuit {
             metadata: md,
-            contents: contents.ok_or(Error::BadResponse("GCP No content"))?,
+            contents: contents.ok_or(Error::MissingResults)?,
         })
     }
-    fn enumerate_circuits(&self, id: UserId) -> Result<Vec<CircuitMetadata>> {
+
+    fn enumerate_circuits_1(&self, id: UserId) -> Result<Vec<CircuitMetadata>> {
         let hub = self.get_conn();
+
+        // TODO: This should use projection once we can remove "Thumbnail" from
+        //  the metadata
         let result = hub
             .projects()
-            .run_query(enum_req(&id), self.project_id.as_str())
+            .run_query(
+                requests::query_req(&self.kind, "Owner", &id, None),
+                self.project_id.as_str(),
+            )
             .doit();
 
         let entity_results = unwrap_resp(result)?
             .batch
-            .ok_or(Error::BadResponse("Empty batch"))?
+            .ok_or(Error::MissingResults)?
             .entity_results;
         let entity_results = match entity_results {
             Some(res) => res,
@@ -328,16 +301,19 @@ impl Interface for GcpDsInterface {
 
         let mut mds = Vec::new();
         for result in entity_results {
-            let (md, _) = parse_circuit(result)?;
+            let (mut md, _) = parse_circuit(result)?;
+            md.owner = id.clone();
             mds.push(md);
         }
         Ok(mds)
     }
-    fn update_circuit(&self, c: &Circuit) -> Result<()> {
-        self.put(c).map(|_| ())
+
+    fn update_circuit_1(&self, c: &Circuit) -> Result<()> {
+        self.put_circuit(c).map(|_| ())
     }
-    fn new_circuit(&self, c: Circuit) -> Result<Circuit> {
-        let mut_res = self.put(&c)?;
+
+    fn new_circuit_1(&self, c: Circuit) -> Result<Circuit> {
+        let mut_res = self.put_circuit(&c)?;
 
         Ok(Circuit {
             metadata: CircuitMetadata {
@@ -347,20 +323,21 @@ impl Interface for GcpDsInterface {
             ..c
         })
     }
-    fn delete_circuit(&self, id: CircuitId) -> Result<()> {
+
+    fn delete_circuit_1(&self, id: CircuitId) -> Result<()> {
         let (hub, trans) = self.init_transaction()?;
         let result = hub
             .projects()
-            .commit(del_req(id, trans), &self.project_id)
+            .commit(requests::del_req(&self.kind, trans, id), &self.project_id)
             .doit();
 
         match unwrap_resp(result)?
             .index_updates
-            .ok_or(Error::BadResponse(""))?
+            .ok_or(Error::MissingMutations)?
         {
             1 => Ok(()),
             0 => Ok(()),
-            _ => Err(Error::BadResponse("GCP Delete removed too many entries")),
+            _ => Err(Error::UnexpectedMutations),
         }
     }
 }

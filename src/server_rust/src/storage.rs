@@ -17,16 +17,14 @@ pub use sqlite::SqliteInterface as Sqlite;
 #[derive(Debug)]
 pub enum Error {
     CircuitIdNotFound(CircuitId),
-    BadResponse(&'static str),
-    Other(Box<dyn std::error::Error>),
+    Internal(Box<dyn std::error::Error>),
 }
 
 impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
             Error::CircuitIdNotFound(id) => write!(f, "Invalid circuit id: {}", id),
-            Error::BadResponse(msg) => write!(f, "TODO: Make an error for GCP: {}", msg),
-            Error::Other(e) => e.fmt(f),
+            Error::Internal(e) => e.fmt(f),
         }
     }
 }
