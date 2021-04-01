@@ -25,6 +25,8 @@ pub enum AuthType {
 pub struct Config {
     pub storage_type: StorageType,
     pub auth_types: Vec<AuthType>,
+    pub address: String,
+    pub port: u16,
 }
 
 pub fn load_config<T: Default + Serialize + for<'de> Deserialize<'de>, P: AsRef<Path>>(
@@ -77,6 +79,8 @@ impl std::default::Default for Config {
         Self {
             storage_type: StorageType::Mem,
             auth_types: vec![AuthType::NoAuth],
+            address: String::from("0.0.0.0"),
+            port: 8080,
         }
     }
 }

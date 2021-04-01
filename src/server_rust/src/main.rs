@@ -6,6 +6,8 @@ extern crate rocket;
 use std::boxed::Box;
 use std::error::Error;
 
+use rocket::config::{ConfigBuilder, Environment};
+
 use config::{load_config, Config};
 
 mod api;
@@ -27,9 +29,19 @@ fn main() -> Result<(), Box<dyn Error>> {
         ))];
     }
 
+    let env = if is_gcp {
+        Environment::Production
+    } else {
+        Environment::Development
+    };
+    let rocket_config = ConfigBuilder::new(env)
+        .address(cfg.address.clone())
+        .port(cfg.port)
+        .finalize()?;
+
     let (storage, identifier) = cfg.make();
 
-    rocket::ignite()
+    rocket::custom(rocket_config)
         .mount("/api", api::routes())
         .register(api::catchers())
         .mount("/", web::routes())
