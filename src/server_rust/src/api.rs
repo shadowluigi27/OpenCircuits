@@ -1,4 +1,6 @@
-use rocket::Route;
+use std::vec::Vec;
+
+use rocket::{Catcher, Route};
 use rocket_contrib::json::Json;
 
 use crate::auth::UserToken;
@@ -19,4 +21,23 @@ pub fn routes() -> Vec<Route> {
         circuits::update,
         circuits::delete
     ]
+}
+
+#[catch(400)]
+fn c400() -> () {}
+#[catch(401)]
+fn c401() -> () {}
+#[catch(403)]
+fn c403() -> () {}
+#[catch(404)]
+fn c404() -> () {}
+#[catch(405)]
+fn c405() -> () {}
+
+#[catch(500)]
+fn c500() -> () {}
+
+pub fn catchers() -> Vec<Catcher> {
+    // Override default catchers to NOT return HTML
+    catchers!(c400, c401, c403, c404, c405, c500)
 }

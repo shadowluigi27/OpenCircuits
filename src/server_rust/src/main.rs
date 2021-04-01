@@ -31,6 +31,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     rocket::ignite()
         .mount("/api", api::routes())
+        .register(api::catchers())
         .mount("/", web::routes())
         .manage(identifier)
         .manage(storage)
