@@ -77,7 +77,9 @@ impl Config {
 impl std::default::Default for Config {
     fn default() -> Self {
         Self {
-            storage_type: StorageType::Mem,
+            storage_type: StorageType::Sqlite {
+                path: String::from("circuits.db"),
+            },
             auth_types: vec![AuthType::NoAuth],
             address: String::from("0.0.0.0"),
             port: 8080,
