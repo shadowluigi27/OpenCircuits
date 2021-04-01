@@ -6,23 +6,27 @@ extern crate rocket;
 use std::boxed::Box;
 use std::error::Error;
 
-use config::{Config, load_config};
+use config::{load_config, Config};
 
 mod api;
 mod auth;
+mod config;
 mod model;
 mod storage;
 mod web;
-mod config;
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let is_gcp = std::env::var("DATASTORE_PROJECT_ID").is_ok();
+    let mut cfg: Config = load_config("open_circuits.json")?;
+
     // When in production, it may be appropriate to force some config values
+    let is_gcp = std::env::var("DATASTORE_PROJECT_ID").is_ok();
     if is_gcp {
-        panic!("GCP not supported yet")
+        cfg.storage_type = config::StorageType::Gcp;
+        cfg.auth_types = vec![config::AuthType::GoogleOAuth(String::from(
+            "credentials.json",
+        ))];
     }
 
-    let cfg: Config = load_config("open_circuits.json")?;
     let (storage, identifier) = cfg.make();
 
     rocket::ignite()

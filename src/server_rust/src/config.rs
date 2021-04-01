@@ -7,24 +7,24 @@ use std::vec::Vec;
 use serde::{Deserialize, Serialize};
 
 use crate::auth::{IdentityDecoder, Method, NoAuth};
-use crate::storage::{Interface, Mem, Sqlite};
+use crate::storage::{GcpDs, Interface, Mem, Sqlite};
 
 #[derive(Serialize, Deserialize)]
-enum StorageType {
+pub enum StorageType {
     Mem,
     Sqlite { path: String },
     GcpEmu { host: String, proj: String },
     Gcp,
 }
 #[derive(Serialize, Deserialize)]
-enum AuthType {
+pub enum AuthType {
     NoAuth,
     GoogleOAuth(String),
 }
 #[derive(Serialize, Deserialize)]
 pub struct Config {
-    storage_type: StorageType,
-    auth_types: Vec<AuthType>,
+    pub storage_type: StorageType,
+    pub auth_types: Vec<AuthType>,
 }
 
 pub fn load_config<T: Default + Serialize + for<'de> Deserialize<'de>, P: AsRef<Path>>(
@@ -49,8 +49,8 @@ impl StorageType {
         match self {
             Self::Mem => Box::new(Mem::new()),
             Self::Sqlite { path } => Box::new(Sqlite::new(&path).unwrap()),
-            Self::GcpEmu { .. } => panic!("Gcp Emu not supported yet"),
-            Self::Gcp => panic!("Gcp not supported yet"),
+            Self::GcpEmu { host, proj } => Box::new(GcpDs::new_emu(proj, host)),
+            Self::Gcp => Box::new(GcpDs::new(std::env::var("DATASTORE_PROJECT_ID").unwrap())),
         }
     }
 }
