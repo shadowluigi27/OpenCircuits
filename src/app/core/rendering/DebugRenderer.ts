@@ -39,7 +39,7 @@ export const DebugRenderer = (() => {
 
             if (DEBUG_PRESSABLE_BOUNDS) {
                 const pressables = objects.filter((c) => isPressable(c)) as Pressable[];
-                const cullboxes = pressables.map((p) => p.getPressableBoxes()).flatMap((p, i) => p[i]);
+                const cullboxes = pressables.flatMap((p) => p.getPressableBoxes());
                 renderer.save();
                 for (const cullBox of cullboxes) {
                     renderer.transform(camera, cullBox);
