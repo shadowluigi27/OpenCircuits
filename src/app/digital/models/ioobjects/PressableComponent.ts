@@ -12,16 +12,21 @@ import {DigitalComponent} from "../DigitalComponent";
 
 export abstract class PressableComponent extends DigitalComponent implements Pressable {
     @serialize
-    protected pressableBox: Transform;
+    protected pressableBoxes: Transform[];
 
     @serialize
     protected on: boolean;
 
-    protected constructor(inputPortCount: ClampedValue, outputPortCount: ClampedValue, size: Vector, pSize: Vector) {
+    protected constructor(inputPortCount: ClampedValue, outputPortCount: ClampedValue, size: Vector, 
+                          pSize: Vector, componentCount: number = 1) {
         super(inputPortCount, outputPortCount, size);
 
-        this.pressableBox = new Transform(V(), pSize);
-        this.pressableBox.setParent(this.transform);
+        this.pressableBoxes = [];
+        for (let i = 0; i < componentCount; i++) {
+            let newBox = new Transform(V(), pSize);
+            newBox.setParent(this.transform);
+            this.pressableBoxes.push(newBox);
+        }
 
         this.on = false;
     }
@@ -49,7 +54,10 @@ export abstract class PressableComponent extends DigitalComponent implements Pre
      *           false otherwise
      */
     public isWithinPressBounds(v: Vector): boolean {
-        return RectContains(this.pressableBox, v);
+        for (let box of this.pressableBoxes)
+            if (RectContains(box, v))
+                return true;
+        return false;
     }
 
     public isWithinSelectBounds(v: Vector): boolean {
@@ -58,8 +66,8 @@ export abstract class PressableComponent extends DigitalComponent implements Pre
         return super.isWithinSelectBounds(v) && !this.isWithinPressBounds(v);
     }
 
-    public getPressableBox(): Transform {
-        return this.pressableBox;
+    public getPressableBoxes(): Transform[] {
+        return this.pressableBoxes;
     }
 
     public isOn(): boolean {
@@ -68,19 +76,27 @@ export abstract class PressableComponent extends DigitalComponent implements Pre
 
     public getMinPos(): Vector {
         const min = super.getMinPos();
+
         // Find minimum pos from corners of selection box
-        const corners = this.pressableBox.getCorners().map((v) =>
-            v.sub(this.getOffset())
-        );
+        const corners: Vector[] = [];
+        for (const pressableBox of this.pressableBoxes)
+            corners.concat(pressableBox.getCorners().map((v) =>
+                v.sub(this.getOffset())
+            ));
+
         return Vector.min(min, ...corners);
     }
 
     public getMaxPos(): Vector {
         const max = super.getMaxPos();
+        
         // Find maximum pos from corners of selection box
-        const corners = this.pressableBox.getCorners().map((v) =>
-            v.add(this.getOffset())
-        );
+        const corners: Vector[] = [];
+        for (const pressableBox of this.pressableBoxes)
+            corners.concat(pressableBox.getCorners().map((v) =>
+                v.add(this.getOffset())
+            ));
+
         return Vector.max(max, ...corners);
     }
 
@@ -90,5 +106,4 @@ export abstract class PressableComponent extends DigitalComponent implements Pre
 
     public abstract getOffImageName(): string;
     public abstract getOnImageName(): string;
-
 }

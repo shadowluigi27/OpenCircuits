@@ -8,7 +8,7 @@ export interface Pressable extends Component {
     click(): void;
     release(): void;
     isWithinPressBounds(v: Vector): boolean;
-    getPressableBox(): Transform;
+    getPressableBoxes(): Transform[];
 }
 
 export function isPressable(p: unknown): p is Pressable {

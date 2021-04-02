@@ -73,11 +73,14 @@ export const ComponentRenderer = (() => {
 
             // Draw background box for pressable components
             if (object instanceof PressableComponent) {
-                // Set size/pos for drawing image to be size of "pressable" part
-                size = object.getPressableBox().getSize();
-
-                const box = transform;
-                drawBox(renderer, box, selected);
+                for (const pressableBox of object.getPressableBoxes())
+                {
+                    // Set size/pos for drawing image to be size of "pressable" part
+                    size = pressableBox.getSize();
+    
+                    const box = transform;
+                    drawBox(renderer, box, selected);
+                }
             }
 
             // Draw label and set the label's size
