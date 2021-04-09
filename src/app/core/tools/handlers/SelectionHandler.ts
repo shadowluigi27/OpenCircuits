@@ -26,6 +26,9 @@ export const SelectionHandler: EventHandler = ({
         const ports = GetAllPorts(designer.getObjects());
         const objs = designer.getAll() as (Component | Wire)[];
 
+        // Ensures that components on top are selected first
+        objs.reverse();
+
         // Check if an object was clicked
         const obj = objs.find(o => o.isWithinSelectBounds(worldMousePos));
 
