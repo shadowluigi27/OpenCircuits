@@ -35,6 +35,8 @@ import {ICRenderer}  from "./other/ICRenderer";
 import {GateRenderer} from "./gates/GateRenderer";
 import {LEDRenderer} from "./outputs/LEDRenderer";
 import {SegmentDisplayRenderer} from "./outputs/SegmentDisplayRenderer";
+import { InputArray } from '../../models/ioobjects/inputs/InputArray';
+import { InputArrayRenderer } from './inputs/InputArrayRenderer';
 
 
 export const ComponentRenderer = (() => {
@@ -58,6 +60,7 @@ export const ComponentRenderer = (() => {
 
             const transform = object.getTransform();
             const imgName = object.getImageName();
+            let imageAlreadyRendered = false;
 
             let size = transform.getSize();
 
@@ -108,13 +111,17 @@ export const ComponentRenderer = (() => {
                 drawBox(renderer, transform, selected);
             else if (object instanceof Encoder || object instanceof Decoder)
                 drawBox(renderer, transform, selected);
+            else if (object instanceof InputArray) {
+                InputArrayRenderer.render(renderer, object);
+                imageAlreadyRendered = true;
+            }
 
             // Draw tinted image
             const tint = (selected ? SELECTED_FILL_COLOR : undefined);
             if (object instanceof LED) {
                 LEDRenderer.render(renderer, camera, object, selected);
             }
-            else if (imgName) {
+            else if (imgName && !imageAlreadyRendered) {
                 renderer.image(Images.GetImage(imgName), V(), size, tint);
             }
 
