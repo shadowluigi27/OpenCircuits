@@ -15,7 +15,9 @@ export abstract class PressableComponent extends DigitalComponent implements Pre
     protected pressableBoxes: Transform[];
 
     @serialize
-    protected on: boolean;
+    protected on: boolean[];
+
+    protected lastPressedBoxIndex: number;
 
     protected constructor(inputPortCount: ClampedValue, outputPortCount: ClampedValue, size: Vector, 
                           pSize: Vector, componentCount: number = 1) {
@@ -23,27 +25,33 @@ export abstract class PressableComponent extends DigitalComponent implements Pre
 
         this.pressableBoxes = [];
         for (let i = 0; i < componentCount; i++) {
-            let newBox = new Transform(V(), pSize);
+            let newBox = new Transform(V(0, size.y*i), pSize);
             newBox.setParent(this.transform);
             this.pressableBoxes.push(newBox);
         }
 
-        this.on = false;
+        this.on = [];
+        for (let i = 0; i < componentCount; i++) {
+            this.on.push(false);
+        }
     }
 
     public activate(signal: boolean, i: number = 0): void {
-        this.on = signal;
+        this.on[i] = signal;
 
         super.activate(signal, i);
     }
 
     public press(): void {
+        console.log("aaa");
     }
 
     public click(): void {
+        console.log("bbb");
     }
 
     public release(): void {
+        console.log("ccc");
     }
 
     /**
@@ -54,9 +62,13 @@ export abstract class PressableComponent extends DigitalComponent implements Pre
      *           false otherwise
      */
     public isWithinPressBounds(v: Vector): boolean {
-        for (let box of this.pressableBoxes)
-            if (RectContains(box, v))
+        for (var i = 0; i < this.pressableBoxes.length; i++)
+            var box = this.pressableBoxes[i];
+            if (RectContains(box, v)) {
+                this.lastPressedBoxIndex = i;
                 return true;
+            }
+        this.lastPressedBoxIndex = null;
         return false;
     }
 
@@ -70,8 +82,8 @@ export abstract class PressableComponent extends DigitalComponent implements Pre
         return this.pressableBoxes;
     }
 
-    public isOn(): boolean {
-        return this.on;
+    public isOn(i: number = 0): boolean {
+        return this.on[i];
     }
 
     public getMinPos(): Vector {

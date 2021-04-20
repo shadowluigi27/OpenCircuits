@@ -15,7 +15,7 @@ export class Switch extends PressableComponent {
     }
 
     public click(): void {
-        this.activate(!this.on);
+        this.activate(!this.on[0]);
     }
 
     public activate(signal: boolean): void {

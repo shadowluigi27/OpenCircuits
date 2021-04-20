@@ -26,6 +26,11 @@
             "icon": "switch.svg"
           },
           {
+            "id": "SwitchArray",
+            "label": "Switch Array",
+            "icon": "switch.svg"
+          },
+          {
             "id": "Clock",
             "label": "Clock",
             "icon": "clock.svg"

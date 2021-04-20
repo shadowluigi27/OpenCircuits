@@ -10,16 +10,14 @@ export const InputArrayRenderer = (() => {
     return {
         render(renderer: Renderer, component: InputArray): void {
             const size = component.getSize();
+            const offset = size.y;
 
-            // Get the image name 
-            const image = Images.GetImage(component.isOn() ? 
-                component.getOnImageName() : 
-                component.getOffImageName());
+            for (let i = 0; i < component.getComponentCount(); i++) {
+                const image = Images.GetImage(component.isOn(i) ? 
+                    component.getOnImageName() : 
+                    component.getOffImageName())
 
-            // Draw the images
-            for (let i = 0; i < component.getPressableBoxes().length; i++)
-            {
-                renderer.image(image, V(), size);
+                renderer.image(image, V(0, offset*i), size);
             }
         }
     }
