@@ -76,14 +76,30 @@ export const ComponentRenderer = (() => {
 
             // Draw background box for pressable components
             if (object instanceof PressableComponent) {
-                for (const pressableBox of object.getPressableBoxes())
-                {
+                const pressableBoxes = object.getPressableBoxes();
+
+                if (object instanceof InputArray)
+                    renderer.translate(V(0, -object.getComponentSize().y));
+
+                for (let i = 0; i < pressableBoxes.length; i++) {
                     // Set size/pos for drawing image to be size of "pressable" part
-                    size = pressableBox.getSize();
-    
-                    const box = transform;
+                    size = pressableBoxes[i].getSize();
+                    let componentSize = object.getComponentSize();
+                    let box = transform.copy();
+
+                    // Adjust size if this is a InputArray
+                    if (object instanceof InputArray) {
+                        box.scaleSize(V(1, 1/object.getComponentCount()));
+                    }
+
+                    renderer.translate(V(0, componentSize.y*i));
+
                     drawBox(renderer, box, selected);
+
+                    renderer.translate(V(0, componentSize.y*-i))
                 }
+                if (object instanceof InputArray)
+                    renderer.translate(V(0, object.getComponentSize().y));
             }
 
             // Draw label and set the label's size
@@ -112,7 +128,7 @@ export const ComponentRenderer = (() => {
             else if (object instanceof Encoder || object instanceof Decoder)
                 drawBox(renderer, transform, selected);
             else if (object instanceof InputArray) {
-                InputArrayRenderer.render(renderer, object);
+                InputArrayRenderer.render(renderer, object, size);
                 imageAlreadyRendered = true;
             }
 

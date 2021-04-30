@@ -169,6 +169,11 @@ export class Transform {
         this.dirtyCorners = true;
     }
 
+    public scaleSize(s: Vector): void {
+        this.size.x = this.size.x * s.x;
+        this.size.y = this.size.y * s.y;
+    }
+
     /**
      * Converts the given Vector, v, to local space relative
      *  to this transform

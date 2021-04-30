@@ -17,15 +17,21 @@ export abstract class PressableComponent extends DigitalComponent implements Pre
     @serialize
     protected on: boolean[];
 
-    protected lastPressedBoxIndex: number;
+    @serialize
+    protected lastPressedBoxIndex: number = -1;
+
+    @serialize
+    protected componentSize: Vector;
 
     protected constructor(inputPortCount: ClampedValue, outputPortCount: ClampedValue, size: Vector, 
                           pSize: Vector, componentCount: number = 1) {
         super(inputPortCount, outputPortCount, size);
 
         this.pressableBoxes = [];
+        this.componentSize = size.scale(V(1, 1/componentCount));
+        let adjustment = componentCount > 1 ? this.componentSize.y : 0;
         for (let i = 0; i < componentCount; i++) {
-            let newBox = new Transform(V(0, size.y*i), pSize);
+            let newBox = new Transform(V(0, this.componentSize.y*i-adjustment), pSize);
             newBox.setParent(this.transform);
             this.pressableBoxes.push(newBox);
         }
@@ -62,13 +68,16 @@ export abstract class PressableComponent extends DigitalComponent implements Pre
      *           false otherwise
      */
     public isWithinPressBounds(v: Vector): boolean {
-        for (var i = 0; i < this.pressableBoxes.length; i++)
+        var i:number;
+        for (i = 0; i < this.pressableBoxes.length; i++)
+        {
             var box = this.pressableBoxes[i];
             if (RectContains(box, v)) {
                 this.lastPressedBoxIndex = i;
                 return true;
             }
-        this.lastPressedBoxIndex = null;
+        }
+        this.lastPressedBoxIndex = -1;
         return false;
     }
 
@@ -80,6 +89,10 @@ export abstract class PressableComponent extends DigitalComponent implements Pre
 
     public getPressableBoxes(): Transform[] {
         return this.pressableBoxes;
+    }
+
+    public getComponentSize(): Vector {
+        return this.componentSize;
     }
 
     public isOn(i: number = 0): boolean {

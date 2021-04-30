@@ -21,7 +21,7 @@ export abstract class InputArray extends PressableComponent implements Pressable
     }
 
     public click(): void {
-        if (this.lastPressedBoxIndex != null) {
+        if (this.lastPressedBoxIndex >= 0) {
             this.activate(!this.on[this.lastPressedBoxIndex], this.lastPressedBoxIndex);
         } 
     }

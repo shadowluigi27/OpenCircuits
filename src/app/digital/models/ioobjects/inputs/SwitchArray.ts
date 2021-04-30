@@ -7,7 +7,7 @@ import { InputArray } from './InputArray';
 export class SwitchArray extends InputArray {
     public constructor() {
         super(new ClampedValue(3, 2, 8), 
-              V(62, 77), 
+              V(62, 77*3), 
               V(48, 60));
     }
 
