@@ -19,6 +19,9 @@ export class DigitalWire extends Wire {
 
     @serialize
     private isOn: boolean;
+    
+    @serialize
+    private color: string;
 
     public constructor(input?: OutputPort, output?: InputPort) {
         super(input, output);
@@ -26,6 +29,7 @@ export class DigitalWire extends Wire {
         this.p1 = input;
         this.p2 = output;
         this.isOn = false;
+        this.color = "#ffffff";
     }
 
     public activate(signal: boolean): void {
@@ -76,4 +80,17 @@ export class DigitalWire extends Wire {
     public getIsOn(): boolean {
         return this.isOn;
     }
+    
+     public setColor(color: string): void {
+        this.color = color;
+    }
+
+    public isOn(): boolean {
+        return this.inputs.first.getIsOn();
+    }
+
+    public getColor(): string {
+        return this.color;
+    }
+
 }
