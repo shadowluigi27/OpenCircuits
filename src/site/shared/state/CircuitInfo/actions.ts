@@ -8,7 +8,6 @@ import {SET_CIRCUIT_ID_ID, SET_CIRCUIT_NAME_ID,
 
 type ThunkResult<R> = ThunkAction<R, SharedAppState, undefined, any>;
 
-a
 export type SetCircuitIdAction = {
     type: typeof SET_CIRCUIT_ID_ID;
     id: string;
