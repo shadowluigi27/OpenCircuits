@@ -23,16 +23,15 @@ function build_server(prod) {
     return new Promise((resolve, reject) => {
         // Copy server files to build folder
         if (prod) {
-            copy_dir("src/server_rust", "build")
+            copy_dir("src/server", "build")
             resolve();
             return;
         }
 
-        copy_dir("src/server/data/sql/sqlite", "build/sql/sqlite");
-
-        const cmd = (os.platform() === "win32" ?
-                        "cd src/server_rust && cargo build --target-dir ../../build/" :
-                        "cd src/server_rust && cargo build --target-dir ../../build/ && cp ../../build/debug/server ../../build/server");
+        const ext = os.platform() === "win32" ? ".exe" : "";
+        const mode = prod ? "release" : "debug";
+        const mode_flag = prod ? "--release" : "";
+        const cmd = `cd src/server && cargo build ${mode_flag} --target-dir ../../build/ && cp ../../build/${mode}/server${ext} ../../build/server${ext}`
 
         spawn(cmd, {
             shell: true,
@@ -91,7 +90,7 @@ function build_dir(dir) {
 
     // If prod, clear build directory first
     if (prod)
-        rmSync("build", { recursive: true, force: true });
+        rmdirSync("build", { recursive: true, force: true });
 
     // If manual production build, copy secrets
     if (prod && !ci)
