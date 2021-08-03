@@ -10,7 +10,7 @@ import {CircleContains} from "math/MathUtils";
 export abstract class Port implements Selectable {
     protected parent: Component;
     protected isOn: boolean;
-
+    protected notted: boolean;
     protected name: string;
 
     protected dir: Vector;
@@ -45,6 +45,9 @@ export abstract class Port implements Selectable {
         this.name = name;
     }
 
+    public setNotted(notted: boolean){
+        this.notted = notted;
+    }
     public setOriginPos(pos: Vector): void {
         this.origin = pos;
         this.updateDir();
@@ -106,4 +109,9 @@ export abstract class Port implements Selectable {
     public getWires(): Wire[] {
         return this.connections;
     }
+
+    public getNotted(): boolean {
+        return this.notted;
+    }
+
 }
