@@ -25,6 +25,10 @@ export class OutputPort extends Port {
      * @param  {boolean} signal 	The signal to send
      */
     public activate(signal: boolean): void {
+        //if port is a mini not gate
+        
+
+
         // Don't do anything if signal is same as current state
         if (signal === this.isOn)
             return;

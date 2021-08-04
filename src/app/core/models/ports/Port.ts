@@ -45,9 +45,10 @@ export abstract class Port implements Selectable {
         this.name = name;
     }
 
-    public setNotted(notted: boolean){
-        this.notted = notted;
+    public setNotted(){// reverse toggle
+        this.notted = !this.notted;
     }
+
     public setOriginPos(pos: Vector): void {
         this.origin = pos;
         this.updateDir();

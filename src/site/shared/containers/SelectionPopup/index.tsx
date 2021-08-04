@@ -103,6 +103,9 @@ export function SelectionPopup({info, modules}: Props) {
                 render: () => renderer.render(),
                 key: `selection-popup-module-${i}`
             } as any))}
+
+
+
         </div>
     );
 }
