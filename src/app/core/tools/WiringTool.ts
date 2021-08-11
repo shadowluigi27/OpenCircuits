@@ -15,7 +15,6 @@ export const WiringTool = (() => {
         CLICKED,
         DRAGGED
     }
-
     let port: Port;
     let wire: Wire;
     let stateType: StateType;
