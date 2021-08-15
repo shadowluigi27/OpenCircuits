@@ -28,11 +28,12 @@ export const HoverHandler: EventHandler = ({
         // If we clicked a port and also hit a wire,
         //  we want to prioritize the port, so skip selecting
         if (!(obj instanceof Wire && ports.some(p => p.isWithinSelectBounds(worldMousePos)))) {
+            // display a tiny not
             // Select object
             if (obj) {
                 const deselect = (input.isShiftKeyDown() && selections.has(obj));
                 action.add(new SelectAction(selections, obj, deselect).execute());
-                action.add(new ShiftAction(designer, obj).execute());
+                
             }
         }
 
