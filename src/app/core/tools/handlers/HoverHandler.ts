@@ -1,4 +1,4 @@
-import {LEFT_MOUSE_BUTTON} from "core/utils/Constants";
+import {IO_PORT_RADIUS, LEFT_MOUSE_BUTTON} from "core/utils/Constants";
 
 import {Event} from "core/utils/Events";
 import {CircuitInfo} from "core/utils/CircuitInfo";
@@ -7,8 +7,10 @@ import {EventHandler} from "../EventHandler";
 import {CreateDeselectAllAction, SelectAction} from "core/actions/selection/SelectAction";
 import {GroupAction} from "core/actions/GroupAction";
 import {GetAllPorts} from "core/utils/ComponentUtils";
-import {Component, Wire} from "core/models";
+import {Component, Port, Wire} from "core/models";
 import {ShiftAction} from "core/actions/ShiftAction";
+import {Circle} from "core/rendering/shapes/Circle";
+import {HoverAction} from "core/actions/HoverAction";
 
 
 export const HoverHandler: EventHandler = ({
@@ -21,6 +23,7 @@ export const HoverHandler: EventHandler = ({
 
         const ports = GetAllPorts(designer.getObjects());
         const objs = designer.getAll() as (Component | Wire)[];
+        //const objsp: Port = new Port;
 
         // Check if an object was clicked
         const obj = objs.find(o => o.isWithinSelectBounds(worldMousePos));
@@ -30,10 +33,13 @@ export const HoverHandler: EventHandler = ({
         if (!(obj instanceof Wire && ports.some(p => p.isWithinSelectBounds(worldMousePos)))) {
             // display a tiny not
             // Select object
-            if (obj) {
-                const deselect = (input.isShiftKeyDown() && selections.has(obj));
-                action.add(new SelectAction(selections, obj, deselect).execute());
-                
+            if (obj instanceof Component || obj instanceof Wire){
+                let tmp = obj.getCullBox().getPos();
+                action.add(new HoverAction(selections,obj));
+                // draw(new Circle(tmp, IO_PORT_RADIUS/3), circleStyle);
+                const derender = (!selections.has(obj));
+                action.add(new SelectAction(selections, obj, derender).execute());
+
             }
         }
 

@@ -27,16 +27,11 @@ export const IOPortRenderer = (() => {
 
             const borderCol = (selected || portSelected ? SELECTED_BORDER_COLOR : DEFAULT_BORDER_COLOR);
             const circleFillCol = (selected || portSelected ? SELECTED_FILL_COLOR : DEFAULT_FILL_COLOR);
-            const circleStyle = new Style(circleFillCol, borderCol, IO_PORT_BORDER_WIDTH)
-            if(port.getNotted()){
-                // draw special not symbol
-                //renderer.draw(new Polygon((Array(...))v, IO_PORT_RADIUS/3), lineStyle);
-                renderer.draw(new Circle(v, IO_PORT_RADIUS/3), circleStyle);
-                //renderer.draw(new Polygon([v]), circleStyle);
-                console.log("ping!");
-            }else{
-                renderer.draw(new Circle(v, IO_PORT_RADIUS), circleStyle);
+            const circleStyle = new Style(circleFillCol, borderCol, IO_PORT_BORDER_WIDTH);
+            if (port.getNotted()){
+                renderer.draw(new Circle(o, IO_PORT_RADIUS/3), circleStyle);
             }
+            renderer.draw(new Circle(v, IO_PORT_RADIUS), circleStyle);
         }
     };
 })();

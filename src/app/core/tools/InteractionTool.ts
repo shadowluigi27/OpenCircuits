@@ -19,13 +19,14 @@ import {SelectionHandler}     from "./handlers/SelectionHandler";
 import {SelectPathHandler}    from "./handlers/SelectPathHandler";
 import {UndoHandler}          from "./handlers/UndoHandler";
 import {RedoHandler}          from "./handlers/RedoHandler";
+import {HoverHandler} from "core/tools/handlers/HoverHandler";
 
 
 export class InteractionTool extends DefaultTool {
     public constructor(handlers: EventHandler[] =
             [SelectAllHandler, FitToScreenHandler, DuplicateHandler,
              DeleteHandler, SnipWirePortsHandler, DeselectAllHandler,
-             SelectionHandler, SelectPathHandler, RedoHandler, UndoHandler]) {
+             SelectionHandler, SelectPathHandler, RedoHandler, UndoHandler, HoverHandler]) {
         super(...handlers);
     }
 
@@ -79,6 +80,15 @@ export class InteractionTool extends DefaultTool {
                     return true;
                 }
                 break;
+            case "mouseenter":
+                //find type of object
+                if (isPressable(obj) && obj.isWithinPressBounds(worldMousePos)){
+                    //case: mouse is over a port, addresses I-86
+                    //if (obj.getPorts())
+
+                }
+                break;
+
         }
 
         if (locked)
