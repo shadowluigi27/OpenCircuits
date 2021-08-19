@@ -21,13 +21,6 @@ export class DefaultTool {
             return true;
         }
 
-        if (event.type == "mouseenter"){
-            //hover handlers here to ease debugging.
-            console.log("hit");
-
-            return true;
-        }
-
         for (const handler of this.handlers) {
             if (handler.conditions(event, info)) {
                 handler.getResponse(info);

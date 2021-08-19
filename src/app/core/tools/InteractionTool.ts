@@ -80,11 +80,20 @@ export class InteractionTool extends DefaultTool {
                     return true;
                 }
                 break;
+
             case "mouseenter":
+                //hover handlers here to ease debugging.
+                console.log("hit");
+
+                //find anything at this location
+                info.designer.getObjects().find(o => (o.isWithinSelectBounds(worldMousePos)));
                 //find type of object
+                let tmp = this.findObject(worldMousePos, info);
+
                 if (isPressable(obj) && obj.isWithinPressBounds(worldMousePos)){
                     //case: mouse is over a port, addresses I-86
-                    //if (obj.getPorts())
+
+                    //other cases, expand on here later
 
                 }
                 break;
