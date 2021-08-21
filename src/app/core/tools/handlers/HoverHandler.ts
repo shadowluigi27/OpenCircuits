@@ -33,14 +33,16 @@ export const HoverHandler: EventHandler = ({
         if (!(ports.some(p => p.isWithinSelectBounds(worldMousePos)))) {
 
             // Select object
-            if (obj instanceof Component || obj instanceof Wire){
-                let tmp = obj.getCullBox().getPos();
-                action.add(new HoverAction(selections,obj));
-                // display a tiny not
-                // draw(new Circle(tmp, IO_PORT_RADIUS/3), circleStyle);
-                const derender = (!selections.has(obj));
-                action.add(new SelectAction(selections, obj, derender).execute());
+            if (obj){
+                if (obj instanceof Component || obj instanceof Wire){
+                    let tmp = obj.getCullBox().getPos();
+                    action.add(new HoverAction(selections,obj));
+                    // display a tiny not
+                    // draw(new Circle(tmp, IO_PORT_RADIUS/3), circleStyle);
+                    const derender = (!selections.has(obj));
+                    action.add(new SelectAction(selections, obj, derender).execute());
 
+                }
             }
         }
 
