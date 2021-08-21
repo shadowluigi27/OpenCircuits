@@ -30,12 +30,13 @@ export const HoverHandler: EventHandler = ({
 
         // If we clicked a port and also hit a wire,
         //  we want to prioritize the port, so skip selecting
-        if (!(obj instanceof Wire && ports.some(p => p.isWithinSelectBounds(worldMousePos)))) {
-            // display a tiny not
+        if (!(ports.some(p => p.isWithinSelectBounds(worldMousePos)))) {
+
             // Select object
             if (obj instanceof Component || obj instanceof Wire){
                 let tmp = obj.getCullBox().getPos();
                 action.add(new HoverAction(selections,obj));
+                // display a tiny not
                 // draw(new Circle(tmp, IO_PORT_RADIUS/3), circleStyle);
                 const derender = (!selections.has(obj));
                 action.add(new SelectAction(selections, obj, derender).execute());
