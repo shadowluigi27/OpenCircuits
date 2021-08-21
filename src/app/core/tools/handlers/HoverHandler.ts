@@ -11,6 +11,7 @@ import {Component, Port, Wire} from "core/models";
 import {ShiftAction} from "core/actions/ShiftAction";
 import {Circle} from "core/rendering/shapes/Circle";
 import {HoverAction} from "core/actions/HoverAction";
+import {PortInvertAction} from "core/actions/ports/PortInvertAction";
 
 
 export const HoverHandler: EventHandler = ({
@@ -30,17 +31,15 @@ export const HoverHandler: EventHandler = ({
 
         // If we clicked a port and also hit a wire,
         //  we want to prioritize the port, so skip selecting
-        if (!(ports.some(p => p.isWithinSelectBounds(worldMousePos)))) {
+        if (!(obj instanceof Wire && ports.some(p => p.isWithinSelectBounds(worldMousePos)))) {
 
             // Select object
             if (obj){
                 if (obj instanceof Component || obj instanceof Wire){
                     let tmp = obj.getCullBox().getPos();
-                    action.add(new HoverAction(selections,obj));
+                    action.add(new PortInvertAction(tmp));
                     // display a tiny not
-                    // draw(new Circle(tmp, IO_PORT_RADIUS/3), circleStyle);
-                    const derender = (!selections.has(obj));
-                    action.add(new SelectAction(selections, obj, derender).execute());
+                    //draw(new Circle(tmp, IO_PORT_RADIUS/3), circleStyle);
 
                 }
             }

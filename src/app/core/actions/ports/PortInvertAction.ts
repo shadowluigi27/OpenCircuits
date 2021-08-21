@@ -1,36 +1,23 @@
+import {Selectable} from "core/utils/Selectable";
 import {Action} from "core/actions/Action";
+import {Vector} from "Vector";
+import {Circle} from "core/rendering/shapes/Circle";
 
-import {GetPath} from "core/utils/ComponentUtils";
 
-import {CircuitDesigner} from "core/models/CircuitDesigner";
-import {Component} from "core/models/Component";
-import {Port} from "core/models/ports/Port";
+export class PortInvertAction implements Action {
+    private obj: Selectable;
 
-import {GroupAction} from "../GroupAction";
-import {CreateDeletePathAction} from "../deletion/DeletePathActionFactory";
-
-export abstract class PortInvertAction implements Action{
-    protected designer: CircuitDesigner;
-
-    protected targetCount: number;
-    protected initialCount: number;
-
-    private wireDeletionAction: GroupAction;
-
-    protected constructor(designer: CircuitDesigner, target: number, initialCount: number) {
-        this.designer = designer;
-
-        this.targetCount = target;
-        this.initialCount = initialCount;
+    public constructor(v: Vector) {
     }
 
-
-    execute(): Action {
-        return undefined;
+    public execute(): Action {
+        //draw(new Circle(tmp, IO_PORT_RADIUS/3), circleStyle)
+        return this;
     }
 
-    undo(): Action {
-        return undefined;
+    public undo(): Action {
+
+        return this;
     }
 
 }
