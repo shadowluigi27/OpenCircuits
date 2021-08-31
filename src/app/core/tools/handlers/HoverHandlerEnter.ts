@@ -14,7 +14,7 @@ import {HoverAction} from "core/actions/HoverAction";
 import {PortInvertAction} from "core/actions/ports/PortInvertAction";
 
 
-export const HoverHandler: EventHandler = ({
+export const HoverHandlerEnter: EventHandler = ({
     conditions: (event: Event, {}: CircuitInfo) =>
         (event.type === "mouseenter"),
 
@@ -26,7 +26,6 @@ export const HoverHandler: EventHandler = ({
         const objs = designer.getAll() as (Component | Wire)[];
         //const objsp: Port = new Port;
 
-        // Check if an object was clicked
         const obj = objs.find(o => o.isWithinSelectBounds(worldMousePos));
 
         // If we clicked a port and also hit a wire,
