@@ -30,8 +30,8 @@ export const HoverHandlerEnter: EventHandler = ({
 
         // If we clicked a port and also hit a wire,
         //  we want to prioritize the port, so skip selecting
-        if (!(obj instanceof Wire && ports.some(p => p.isWithinSelectBounds(worldMousePos)))) {
-
+        if (obj instanceof Wire) {
+            console.log(obj);
             // Select object
             if (obj){
                 if (obj instanceof Component || obj instanceof Wire){
