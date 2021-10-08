@@ -121,7 +121,11 @@ sudo apt-get remove cmdtest
 ```
 :::
 
-* For Ubuntu, type `sudo apt-get install nodejs`
+* For Ubuntu, type
+```bash
+curl -fsSL https://deb.nodesource.com/setup_16.x |
+sudo -E bash - sudo apt-get install -y nodejs
+```
 
 * For Arch-based distributions, install the `npm` package from the `community` repository.
 
