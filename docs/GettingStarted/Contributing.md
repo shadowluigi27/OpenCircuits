@@ -26,7 +26,7 @@ See [testing](./Running#testing)
 
 ## Submitting your code
 
-Make sure to follow our style guide (link coming soon).
+Make sure to follow our [Style Guide](./StyleGuide).
 
 Before submitting – always make sure to build and run unit tests (we won't merge any request that fails Travis CI)
 
