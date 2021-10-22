@@ -16,3 +16,14 @@ Screenshots
 See following for reference:
 https://github.com/OpenCircuits/OpenCircuits/pull/630
 ___
+## Typescript
+blah
+
+## SCSS
+blah
+
+## React
+blah
+
+## Reduc
+blah
