@@ -19,16 +19,16 @@ ___
 ## Typescript
 blah
 
-__
+___
 ## SCSS
 blah
 
-__
+___
 ## React
 blah
 
-__
+___
 ## Redux
 blah
 
-__
+___
