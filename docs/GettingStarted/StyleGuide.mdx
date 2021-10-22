@@ -1,0 +1,75 @@
+---
+title: Style Guide
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Tabs groupId="system"
+      defaultValue="win"
+      values={[
+          {label: "Pull Requests", value: "pr"},
+          {label: "Typescript", value: "ts"},
+          {label: "SCSS", value: "scss"},
+          {label: "React", value: "react"},
+          {label: "Redux", value: "redux"},
+      ]}>
+
+{/*         */}
+{/* Pull Requests */}
+{/*         */}
+<TabItem value="pr">
+
+### Template
+
+Descriptive title in style of 'Fixes: *Issue*'
+
+State 'Closes Issue \#[*Issue Number*]'
+
+More detailed description of issue
+
+```
+Screenshots
+```
+
+Checklist of steps to resolve issue, separated by priority
+
+Description of how issue was resolved
+
+Note any new issues created
+
+Note related issues ('Related to issue \#[*Issue Number*]')
+
+See following for reference:
+
+https://github.com/OpenCircuits/OpenCircuits/pull/630
+</TabItem>
+
+{/*         */}
+{/* Typescript */}
+{/*         */}
+<TabItem value="ts">
+blah
+</TabItem>
+
+{/*         */}
+{/* SCSS */}
+{/*         */}
+<TabItem value="scss">
+blah
+</TabItem>
+
+{/*         */}
+{/* React */}
+{/*         */}
+<TabItem value="react">
+blah
+</TabItem>
+
+{/*         */}
+{/* Redux */}
+{/*         */}
+<TabItem value="redux">
+blah
+</TabItem>
+</Tabs>
