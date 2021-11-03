@@ -1,6 +1,5 @@
 import {Create} from "serialeazy";
 import {useLayoutEffect, useRef} from "react";
-import {connect} from "react-redux";
 
 import {HEADER_HEIGHT} from "shared/utils/Constants";
 
@@ -15,31 +14,29 @@ import {CreateDeselectAllAction} from "core/actions/selection/SelectAction";
 import {DigitalCircuitInfo} from "digital/utils/DigitalCircuitInfo";
 
 import {DigitalComponent} from "digital/models";
+import {IC} from "digital/models/ioobjects";
 
 import {useWindowSize} from "shared/utils/hooks/useWindowSize";
 import {Droppable} from "shared/components/DragDroppable/Droppable";
 
 import {GetRenderFunc} from "site/digital/utils/Rendering";
-import {AppState} from "site/digital/state";
+import {useDigitalSelector} from "site/digital/utils/hooks/useDigital";
 
 import "./index.scss";
-import {IC} from "digital/models/ioobjects";
 
 
-type OwnProps = {
+type Props = {
     info: DigitalCircuitInfo;
+    canvas: React.MutableRefObject<HTMLCanvasElement>;
 }
-type StateProps = {
-    isLocked: boolean;
-}
-type DispatchProps = {}
-
-type Props = StateProps & DispatchProps & OwnProps;
-const _MainDesigner = ({info, isLocked}: Props) => {
+export const MainDesigner = ({info, canvas}: Props) => {
     const {camera, designer, history, selections, toolManager, renderer} = info;
 
+    const {isLocked} = useDigitalSelector(
+        state => ({ isLocked: state.circuit.isLocked })
+    );
+
     const {w, h} = useWindowSize();
-    const canvas = useRef<HTMLCanvasElement>();
 
 
     // On resize (useLayoutEffect happens sychronously so
@@ -119,9 +116,3 @@ const _MainDesigner = ({info, isLocked}: Props) => {
         </Droppable>
     </>);
 }
-
-
-export const MainDesigner = connect<StateProps, DispatchProps, OwnProps, AppState>(
-    (state) => ({ isLocked: state.circuit.isLocked }),
-    { }
-)(_MainDesigner);

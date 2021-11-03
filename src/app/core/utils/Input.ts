@@ -9,7 +9,8 @@ import {DRAG_TIME,
         S_KEY,
         OPTION_KEY,
         BACKSPACE_KEY,
-        META_KEY} from "core/utils/Constants";
+        META_KEY,
+        ESC_KEY} from "core/utils/Constants";
 
 import {Vector,V} from "Vector";
 import {CalculateMidpoint} from "math/MathUtils";
@@ -87,19 +88,27 @@ export class Input {
         }, false);
 
         window.addEventListener("blur", (_: FocusEvent) => this.onBlur());
+
+        window.addEventListener("paste", (ev: ClipboardEvent) => this.callListeners({ type: "paste", ev }));
+        window.addEventListener("copy",  (ev: ClipboardEvent) => this.callListeners({ type: "copy",  ev }));
+        window.addEventListener("cut",   (ev: ClipboardEvent) => this.callListeners({ type: "cut",   ev }));
     }
 
     private hookupMouseEvents(): void {
         // Mouse events
-        this.canvas.addEventListener("click",       (e: MouseEvent) => this.onClick(V(e.clientX, e.clientY), e.button), false);
-        this.canvas.addEventListener("dblclick",    (e: MouseEvent) => this.onDoubleClick(e.button), false);
-        this.canvas.addEventListener("wheel",       (e: WheelEvent) => this.onScroll(e.deltaY), false);
-        this.canvas.addEventListener("mousedown",   (e: MouseEvent) => this.onMouseDown(V(e.clientX, e.clientY), e.button), false);
-        this.canvas.addEventListener("mouseup",     (e: MouseEvent) => this.onMouseUp(e.button), false);
-        this.canvas.addEventListener("mousemove",   (e: MouseEvent) => this.onMouseMove(V(e.clientX, e.clientY)), false);
-        this.canvas.addEventListener("mouseenter",  (_: MouseEvent) => this.onMouseEnter(), false);
-        this.canvas.addEventListener("mouseleave",  (_: MouseEvent) => this.onMouseLeave(), false);
-        this.canvas.addEventListener("contextmenu", (e: MouseEvent) => { e.preventDefault(); this.callListeners({ type: "contextmenu" }); });
+        this.canvas.addEventListener("click",      (e: MouseEvent) => this.onClick(V(e.clientX, e.clientY), e.button), false);
+        this.canvas.addEventListener("dblclick",   (e: MouseEvent) => this.onDoubleClick(e.button), false);
+        this.canvas.addEventListener("wheel",      (e: WheelEvent) => this.onScroll(e.deltaY), false);
+        this.canvas.addEventListener("mousedown",  (e: MouseEvent) => this.onMouseDown(V(e.clientX, e.clientY), e.button), false);
+        this.canvas.addEventListener("mouseup",    (e: MouseEvent) => this.onMouseUp(e.button), false);
+        this.canvas.addEventListener("mousemove",  (e: MouseEvent) => this.onMouseMove(V(e.clientX, e.clientY)), false);
+        this.canvas.addEventListener("mouseenter", (_: MouseEvent) => this.onMouseEnter(), false);
+        this.canvas.addEventListener("mouseleave", (_: MouseEvent) => this.onMouseLeave(), false);
+
+        this.canvas.addEventListener("contextmenu", (e: MouseEvent) => {
+            e.preventDefault();
+            this.callListeners({ type: "contextmenu" });
+        });
     }
 
     private hookupTouchEvents(): void {
@@ -179,6 +188,9 @@ export class Input {
     public addListener(listener: Listener): void {
         this.listeners.push(listener);
     }
+    public removeListener(listener: Listener): void {
+        this.listeners.splice(this.listeners.indexOf(listener), 1);
+    }
 
     public isMouseDown(): boolean {
         return this.mouseDown;
@@ -191,6 +203,11 @@ export class Input {
     public isShiftKeyDown(): boolean {
         return this.isKeyDown(SHIFT_KEY);
     }
+
+    public isEscKeyDown(): boolean {
+        return this.isKeyDown(ESC_KEY);
+    }
+
     public isModifierKeyDown(): boolean {
         return (this.isKeyDown(CONTROL_KEY) || this.isKeyDown(COMMAND_KEY) || this.isKeyDown(META_KEY));
     }

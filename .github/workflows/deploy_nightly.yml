@@ -1,6 +1,10 @@
 name: Build and Deploy the nightly and documentation sites for the up-to-date code
 env:
   CLOUDSDK_CORE_PROJECT: opencircuits-nightly
+  
+concurrency:
+  group: deploy-night-workflow
+  cancel-in-progress: true
 
 on:
   push:
@@ -33,9 +37,10 @@ jobs:
 
     # Build nightly site
     - name: Build
+      env:
+        OC_OAUTH2_ID: ${{ secrets.OAUTH_ID }}
+        OC_AUTH_TYPES: google
       run: |
-        export OC_AUTH_TYPES=google
-        export OAUTH2_ID=${{ secrets.OAUTH_ID }}
         yarn build --ci --prod server digital
 
     - name: Create OAuth credentials and app.yaml
