@@ -10,37 +10,33 @@ import {GetAllPorts} from "core/utils/ComponentUtils";
 import {Component, Port, Wire} from "core/models";
 import {ShiftAction} from "core/actions/ShiftAction";
 import {Circle} from "core/rendering/shapes/Circle";
-import {HoverAction} from "core/actions/HoverAction";
 import {PortInvertAction} from "core/actions/ports/PortInvertAction";
+import {OutputPort} from "digital/models";
 
 
 export const HoverHandlerEnter: EventHandler = ({
     conditions: (event: Event, {}: CircuitInfo) =>
-        (event.type === "mouseenter"),
+        (event.type === "mousemove"),
 
-    getResponse: ({input, camera, history, designer, selections}: CircuitInfo) => {
+    getResponse: ({input, camera, history, designer}: CircuitInfo) => {
         const action = new GroupAction();
         const worldMousePos = camera.getWorldPos(input.getMousePos());
 
         const ports = GetAllPorts(designer.getObjects());
         const objs = designer.getAll() as (Component | Wire)[];
-        //const objsp: Port = new Port;
-
+        // Check if an object was clicked
         const obj = objs.find(o => o.isWithinSelectBounds(worldMousePos));
-
+        const port = ports.find(o => o.isWithinSelectBounds(worldMousePos)); //need some way to detect between 2 points, but that can be left to another function
         // If we clicked a port and also hit a wire,
         //  we want to prioritize the port, so skip selecting
-        if (obj instanceof Wire) {
-            console.log(obj);
-            // Select object
-            if (obj){
-                if (obj instanceof Component || obj instanceof Wire){
-                    let tmp = obj.getCullBox().getPos();
-                    action.add(new PortInvertAction(tmp));
-                    // display a tiny not
-                    //draw(new Circle(tmp, IO_PORT_RADIUS/3), circleStyle);
+        if ((!(obj instanceof Wire) || port) && input.isKeyDown(666)) {
 
-                }
+            // Select object
+            if (obj) {
+                console.log(obj);
+            }else if (port instanceof OutputPort){
+                console.log(port);
+                //action.add(new PortHoverAction);
             }
         }
 
