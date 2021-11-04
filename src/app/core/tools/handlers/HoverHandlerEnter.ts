@@ -29,14 +29,16 @@ export const HoverHandlerEnter: EventHandler = ({
         const port = ports.find(o => o.isWithinSelectBounds(worldMousePos)); //need some way to detect between 2 points, but that can be left to another function
         // If we clicked a port and also hit a wire,
         //  we want to prioritize the port, so skip selecting
-        if ((!(obj instanceof Wire) || port) && input.isKeyDown(666)) {
+        if (!(obj instanceof Wire) || port) {
 
             // Select object
             if (obj) {
                 console.log(obj);
             }else if (port instanceof OutputPort){
+                if(input.isKeyDown(666)){// tacked on toggle. move to actions
+                    //action.add(new PortHoverAction);
+                }
                 console.log(port);
-                //action.add(new PortHoverAction);
             }
         }
 
