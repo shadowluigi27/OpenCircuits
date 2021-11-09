@@ -22,9 +22,7 @@ title: SCSS
 
 ### Formatting
 
-* Use soft tabs (2 spaces) for indentation.
-* Prefer dashes over camelCasing in class names.
-  - Underscores and PascalCasing are okay if you are using BEM (see [OOCSS and BEM](#oocss-and-bem) below).
+* Use soft tabs (4 spaces) for indentation.
 * Do not use ID selectors.
 * When using multiple selectors in a rule declaration, give each selector its own line.
 * Put a space before the opening brace `{` in rule declarations.
