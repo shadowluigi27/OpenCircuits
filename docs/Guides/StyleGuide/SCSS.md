@@ -547,7 +547,7 @@ Prefer dash-cased variable names (e.g. `$my-variable`) over camelCased or snake_
 
 When writing an SCSS file corresponding to an angular component, the base CSS class should have the same name as the component. When creating sub-classes, they should be named with the structure parent\__child (with two underscores), grandparent\__parent\__child, etc.
 
-Within the SCSS, this looks like the below example with the oldest ancestor being the base css class and old descendant nested in heirarchical order in the style of &\__descendantname
+Within the SCSS, this looks like the below example with the oldest ancestor being the base css class and all descendant nested in heirarchical order in the style of &\__descendantname
 
 ```scss
 .sidenav {
