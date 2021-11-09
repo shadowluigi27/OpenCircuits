@@ -7,22 +7,18 @@ title: SCSS
 *Based off of AirBnB's CSS and CSS-In-Javascript guides*
 
 ## Table of Contents
-
-1. [SCSS](#scss)
-    - [Formatting](#formatting)
-    - [Comments](#comments)
-    - [ID Selectors](#id-selectors)
-    - [JavaScript hooks](#javascript-hooks)
-    - [Border](#border)
-    - [Naming](#naming)
-    - [Ordering](#ordering)
-    - [Nesting](#nesting)
-    - [Inline](#inline)
-    - [Themes](#themes)
-    - [Variables](#variables)
-    - [Nested selectors](#nested-selectors)
-
-## CSS
+  1. [Formatting](#formatting)
+  1. [Comments](#comments)
+  1. [ID Selectors](#id-selectors)
+  1. [JavaScript hooks](#javascript-hooks)
+  1. [Border](#border)
+  1. [Naming](#naming)
+  1. [Ordering](#ordering)
+  1. [Nesting](#nesting)
+  1. [Inline](#inline)
+  1. [Themes](#themes)
+  1. [Variables](#variables)
+  1. [Nested selectors](#nested-selectors)
 
 ### Formatting
 
