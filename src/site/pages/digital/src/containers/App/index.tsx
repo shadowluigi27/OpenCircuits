@@ -68,6 +68,7 @@ import {ClearOscilloscopeButtonModule,
 import exampleConfig from "site/digital/data/examples.json";
 
 import "./index.scss";
+import {HoverHandlerEnter} from "core/tools/handlers/HoverHandlerEnter";
 
 
 const exampleCircuits = exampleConfig.examples.map((example) =>
@@ -90,7 +91,7 @@ export const App = ((store: AppStore) => {
             SelectAllHandler, FitToScreenHandler, DuplicateHandler,
             DeleteHandler, SnipWirePortsHandler, DeselectAllHandler,
             SelectionHandler, SelectPathHandler, RedoHandler, UndoHandler,
-            CopyHandler, PasteHandler((data) => DigitalPaste(data, info))
+            CopyHandler, HoverHandlerEnter, PasteHandler((data) => DigitalPaste(data, info))
         ]),
         PanTool, RotateTool,
         TranslateTool, WiringTool,
