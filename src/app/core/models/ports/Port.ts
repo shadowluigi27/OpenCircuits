@@ -41,6 +41,8 @@ export abstract class Port implements Selectable {
      */
     protected connections: Wire[];
 
+    protected notted: boolean = false;
+
     /**
      * Intializes a Port with the following parameters
      * @param parent parent component of the port
@@ -216,5 +218,9 @@ export abstract class Port implements Selectable {
      */
     public getWires(): Wire[] {
         return this.connections;
+    }
+
+    getNotted() {
+        return false;
     }
 }

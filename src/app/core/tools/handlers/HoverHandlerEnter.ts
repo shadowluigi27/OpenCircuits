@@ -34,7 +34,7 @@ export const HoverHandlerEnter: EventHandler = ({
             // Select object
             if (obj) {
                 console.log(obj);
-            }else if (port instanceof OutputPort){
+            }else if (port instanceof OutputPort){// mouse is over a port. turn on toggle options
                 if(input.isKeyDown(666)){// tacked on toggle. move to actions
                     //action.add(new PortHoverAction);
                 }
