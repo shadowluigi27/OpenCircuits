@@ -30,10 +30,8 @@ export const HoverHandlerEnter: EventHandler = ({
         // If we clicked a port and also hit a wire,
         //  we want to prioritize the port, so skip selecting
         if (!(obj instanceof Wire) || port) {
-
             // Select object
             if (obj) {
-                console.log(obj);
             }
         }else if (port){
             console.log(port);
@@ -43,9 +41,5 @@ export const HoverHandlerEnter: EventHandler = ({
                 }
             }
         }
-
-        // https://github.com/OpenCircuits/OpenCircuits/issues/622
-        if (!action.isEmpty())
-            history.add(action);
     }
 });
