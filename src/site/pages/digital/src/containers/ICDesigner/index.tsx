@@ -141,6 +141,7 @@ export const ICDesigner = (() => {
             designer.reset();
             icInfo.ic = new IC(data);
             icInfo.ic.setPos(V());
+            console.log("in index");
             designer.addObject(icInfo.ic);
 
             // Set camera

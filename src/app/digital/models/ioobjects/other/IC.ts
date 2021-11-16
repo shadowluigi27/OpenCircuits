@@ -47,6 +47,7 @@ export class IC extends DigitalComponent {
             output.activate = (on) => {
                 port.activate(on);
             }
+            // port.activate(output.getInputPort(0).getIsOn()); // elephant
         }
     }
 

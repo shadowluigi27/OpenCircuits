@@ -37,6 +37,11 @@ export class ICData {
     private inputPorts:  InputPort[];
     private outputPorts: OutputPort[];
 
+    /**
+     * The sole constructor for ICData, it is recommended to use the Create function instead.
+     * 
+     * @param collection the circuit to create an instance of ICData of
+     */
     public constructor(collection?: DigitalObjectSet) {
         this.name = ""; // TODO: have names
         this.transform = new Transform(V(0,0), V(0,0));
@@ -184,8 +189,16 @@ export class ICData {
         return true;
     }
 
-    public static Create(objects: IOObject[]): ICData {
-        const copies = new DigitalObjectSet(CopyGroup(objects).toList());
+    /**
+     * This function is the preferred way to create an instance of ICData
+     * 
+     * @param objects The circuit to create the ICData from. If it is an IOObject[], then the objects are copied.
+     *  If it is a DigitalObjectSet, then the objects input will be modified so that Switch and Button are considered
+     *  as the only inputs.
+     * @returns The newly created ICData
+     */
+    public static Create(objects: IOObject[] | DigitalObjectSet): ICData {
+        const copies = objects instanceof DigitalObjectSet ? objects : new DigitalObjectSet(CopyGroup(objects).toList());
         if (!this.IsValid(copies))
             return undefined;
 
@@ -200,6 +213,16 @@ export class ICData {
         const inputs = copies.getInputs().filter((i) => INPUT_WHITELIST.some((type) => i instanceof type));
         const others = copies.getOthers().concat(copies.getInputs())
                 .filter((c) => !INPUT_WHITELIST.some((type) => c instanceof type));
+
+        for (let i of inputs) { // elephant
+            i.activate(false);
+            // for (let o of i.getOutputPorts()) {
+            //     o.activate(false);
+            // }
+        }
+        // for (let o of copies.getOutputs()) {
+        //     o.activate(o.getInputPort(0).getInput().getIsOn());
+        // }
 
         copies.setInputs(inputs);
         copies.setOthers(others);
