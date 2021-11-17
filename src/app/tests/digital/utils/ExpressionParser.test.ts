@@ -6,6 +6,7 @@ import {InputToken, Token,
 import {Formats} from "digital/utils/ExpressionParser/Constants/Formats";
 
 import {DigitalCircuitDesigner} from "digital/models/DigitalCircuitDesigner";
+import {IC, ICData} from "digital/models/ioobjects";
 import {Switch} from "digital/models/ioobjects/inputs/Switch";
 import {ConstantHigh} from "digital/models/ioobjects/inputs/ConstantHigh";
 import {ConstantLow} from "digital/models/ioobjects/inputs/ConstantLow";
@@ -587,6 +588,27 @@ describe("Expression Parser", () => {
     describe("8 Inputs", () => {
         runTests(8, "a|b|c|d|e|f|g|h", [false, ...new Array(2**8 - 1).fill(true)]);
     });
+
+    describe("Simplify and Generate as IC", () => {
+        describe("!(A|B)", () => {
+            const expression = "!(A|B)";
+            const inputs: [string, Switch][] = [["A", new Switch()], ["B", new Switch()]];
+            const o = new LED();
+
+            const objectSet = ExpressionToCircuit(new Map(inputs), expression, o);
+
+            test("Create ICData and IC without error", () => {
+                const data = ICData.Create(objectSet);
+                if (!data)
+                    expect(false).toBeTruthy();
+                data.setName(expression);
+                const ic = new IC(data);
+                if (!ic)
+                    expect(false).toBeTruthy();
+                ic.setName(expression);
+            });
+        });
+    })
 
     describe("Alternate Formats", () => {
         runTests(3, "a&&b&&c", [false, false, false, false, false, false, false, true], Formats[1]);
