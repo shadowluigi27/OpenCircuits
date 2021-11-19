@@ -4,7 +4,7 @@ title: SCSS
 
 # Open Circuits (S)CSS  Style Guide!
 
-*Based off of AirBnB's CSS and CSS-In-Javascript guides*
+*Based off of AirBnB's CSS and CSS-In-Javascript style guides*
 
 ## Table of Contents
   1. [Formatting](#formatting)

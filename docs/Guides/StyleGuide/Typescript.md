@@ -4,7 +4,7 @@ title: Typescript
 
 # Open Circuits Typescript Style Guide!
 
-*Based off of AirBnB's Javascript guide*
+*Based off of AirBnB's Javascript style guide*
 
 
 TO DO LIST:
