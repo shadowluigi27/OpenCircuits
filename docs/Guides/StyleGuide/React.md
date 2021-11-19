@@ -32,6 +32,8 @@ title: React
   - Do not use `React.createElement` unless you’re initializing the app from a file that is not JSX.
   - [`react/forbid-prop-types`](https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/forbid-prop-types.md) will allow `arrays` and `objects` only if it is explicitly noted what `array` and `object` contains, using `arrayOf`, `objectOf`, or `shape`.
 
+**[back to top](#table-of-contents)**
+
 ## Class vs `React.createClass` vs stateless
 
   - If you have internal state and/or refs, prefer `class extends React.Component` over `React.createClass`. eslint: [`react/prefer-es6-class`](https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/prefer-es6-class.md) [`react/prefer-stateless-function`](https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/prefer-stateless-function.md)
@@ -75,11 +77,15 @@ title: React
     }
     ```
 
+**[back to top](#table-of-contents)**
+
 ## Mixins
 
   - [Do not use mixins](https://facebook.github.io/react/blog/2016/07/13/mixins-considered-harmful.html).
 
   > Why? Mixins introduce implicit dependencies, cause name clashes, and cause snowballing complexity. Most use cases for mixins can be accomplished in better ways via components, higher-order components, or utility modules.
+
+**[back to top](#table-of-contents)**
 
 ## Naming
 
@@ -156,6 +162,8 @@ title: React
     <MyComponent variant="fancy" />
     ```
 
+**[back to top](#table-of-contents)**
+
 ## Declaration
 
   - Do not use `displayName` for naming components. Instead, name the component by reference.
@@ -171,6 +179,8 @@ title: React
     export default class ReservationCard extends React.Component {
     }
     ```
+
+**[back to top](#table-of-contents)**
 
 ## Alignment
 
@@ -239,6 +249,8 @@ title: React
     )}
     ```
 
+**[back to top](#table-of-contents)**
+
 ## Quotes
 
   - Always use double quotes (`"`) for JSX attributes, but single quotes (`'`) for all other JS. eslint: [`jsx-quotes`](https://eslint.org/docs/rules/jsx-quotes)
@@ -258,6 +270,8 @@ title: React
     // good
     <Foo style={{ left: '20px' }} />
     ```
+
+**[back to top](#table-of-contents)**
 
 ## Spacing
 
@@ -287,6 +301,8 @@ title: React
     // good
     <Foo bar={baz} />
     ```
+
+**[back to top](#table-of-contents)**
 
 ## Props
 
@@ -482,6 +498,8 @@ We don’t recommend using indexes for keys if the order of items may change.
     return <WrappedComponent {...relevantProps} />
   }
   ```
+
+**[back to top](#table-of-contents)**
 
 ## Refs
 
