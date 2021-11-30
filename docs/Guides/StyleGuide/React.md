@@ -19,7 +19,6 @@ title: React
   1. [Tags](#tags)
   1. [Methods](#methods)
   1. [Ordering](#ordering)
-  1. [`isMounted`](#ismounted)
 
 ## Basic Rules
 
@@ -663,7 +662,6 @@ We don’t recommend using indexes for keys if the order of items may change.
   1. `propTypes`
   1. `contextTypes`
   1. `childContextTypes`
-  1. `mixins`
   1. `statics`
   1. `defaultProps`
   1. `getDefaultProps`
@@ -680,15 +678,5 @@ We don’t recommend using indexes for keys if the order of items may change.
   1. *getter methods for `render`* like `getSelectReason()` or `getFooterContent()`
   1. *optional render methods* like `renderNavigation()` or `renderProfilePicture()`
   1. `render`
-
-**[back to top](#table-of-contents)**
-
-## `isMounted`
-
-  - Do not use `isMounted`. eslint: [`react/no-is-mounted`](https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/no-is-mounted.md)
-
-  > Why? [`isMounted` is an anti-pattern][anti-pattern], is not available when using ES6 classes, and is on its way to being officially deprecated.
-
-  [anti-pattern]: https://facebook.github.io/react/blog/2015/12/16/ismounted-antipattern.html
 
 **[back to top](#table-of-contents)**
