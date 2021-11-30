@@ -6,7 +6,7 @@ title: Redux
 
 ## Table of Contents
 
-    1. [Basic Rules](#basic-rules)
+  1. [Basic Rules](#basic-rules)
 
 ## Basic Rules
 
