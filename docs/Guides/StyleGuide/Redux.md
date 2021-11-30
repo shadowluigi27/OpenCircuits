@@ -56,6 +56,8 @@ add bold and italics and code sections
 
   - Ideally, no app logic will import the store directly. It should be passed to a React component tree via <Provider\>, or referenced indirectly via middleware such as thunks. In rare cases, you may need to import it into other logic files, but this should be a last resort.
 
+  **[back to top](#table-of-contents)**
+
 ## Strong Recommendations
 - Use Redux Toolkit for Writing Redux Logic
   - Redux Toolkit is our recommended toolset for using Redux. It has functions that build in our suggested best practices, including setting up the store to catch mutations and enable the Redux DevTools Extension, simplifying immutable update logic with Immer, and more.
@@ -88,11 +90,11 @@ add bold and italics and code sections
 
   - In addition, slice reducers should exercise control over what other values are returned as part of the calculated state. Minimize the use of "blind spreads/returns" like return action.payload or return {...state, ...action.payload}, because those rely on the code that dispatched the action to correctly format the contents, and the reducer effectively gives up its ownership of what that state looks like. That can lead to bugs if the action contents are not correct.
 
-:::note
-A "spread return" reducer may be a reasonable choice for scenarios like editing data in a form, where writing a separate action type for each individual field would be time-consuming and of little benefit.
-:::
+  :::note
+  A "spread return" reducer may be a reasonable choice for scenarios like editing data in a form, where writing a separate action type for each individual field would be time-consuming and of little benefit.
+  :::
 
-**[back to top](#table-of-contents)**
+  **[back to top](#table-of-contents)**
 
 - Name State Slices Based On the Stored Data​
   - As mentioned in Reducers Should Own the State Shape , the standard approach for splitting reducer logic is based on "slices" of state. Correspondingly, combineReducers is the standard function for joining those slice reducers into a larger reducer function.
@@ -220,6 +222,8 @@ A "spread return" reducer may be a reasonable choice for scenarios like editing 
   - Prefer using plain JavaScript objects and arrays for your state tree, rather than specialized libraries like Immutable.js. While there are some potential benefits to using Immutable.js, most of the commonly stated goals such as easy reference comparisons are a property of immutable updates in general, and do not require a specific library. This also keeps bundle sizes smaller and reduces complexity from data type conversions.
 
   - As mentioned above, we specifically recommend using Immer if you want to simplify immutable update logic, specifically as part of Redux Toolkit.
+
+  **[back to top](#table-of-contents)**
 
 ## Recommended Recommendations
 - Write Action Types as domain/eventName​
