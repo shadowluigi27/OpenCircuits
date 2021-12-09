@@ -4,8 +4,6 @@ title: React
 
 # Open Circuits React Style Guide!
 
-*Based off of AirBnB's React/JSX style guides*
-
 ## Table of Contents
 
   1. [Basic Rules](#basic-rules)
@@ -19,6 +17,7 @@ title: React
   1. [Tags](#tags)
   1. [Methods](#methods)
   1. [Ordering](#ordering)
+  1. [References](#references)
 
 ## Basic Rules
 
@@ -678,5 +677,11 @@ We don’t recommend using indexes for keys if the order of items may change.
   1. *getter methods for `render`* like `getSelectReason()` or `getFooterContent()`
   1. *optional render methods* like `renderNavigation()` or `renderProfilePicture()`
   1. `render`
+
+**[back to top](#table-of-contents)**
+
+## References
+  - Compiled from the following sources:
+  1. https://airbnb.io/javascript/react/
 
 **[back to top](#table-of-contents)**

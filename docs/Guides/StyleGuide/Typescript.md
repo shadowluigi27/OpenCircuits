@@ -4,9 +4,6 @@ title: Typescript
 
 # Open Circuits Typescript Style Guide!
 
-*Based off of AirBnB's Javascript style guide*
-
-
 TO DO LIST:
 Replace 'Events' section to guide to Open Circuits-style event handling
 
@@ -41,6 +38,7 @@ having consecutive hmtl < a > tags within a line will break the markdown (e.g.<a
   1. [Accessors](#accessors)
   1. [Events](#events)
   1. [Testing](#testing)
+  1. [Reference](#reference)
 
 ## Types
 
@@ -3684,34 +3682,7 @@ having consecutive hmtl < a > tags within a line will break the markdown (e.g.<a
 
 ## Events
 
-  <a name="events--hash"></a>
-  <a name="24.1"></a>
-
-  - [25.1](#events--hash) When attaching data payloads to events (whether DOM events or something more proprietary like Backbone events), pass an object literal (also known as a "hash") instead of a raw value. This allows a subsequent contributor to add more data to the event payload without finding and updating every handler for the event. For example, instead of:
-
-    ```javascript
-    // bad
-    $(this).trigger('listingUpdated', listing.id);
-
-    // ...
-
-    $(this).on('listingUpdated', (e, listingID) => {
-      // do something with listingID
-    });
-    ```
-
-    prefer:
-
-    ```javascript
-    // good
-    $(this).trigger('listingUpdated', { listingID: listing.id });
-
-    // ...
-
-    $(this).on('listingUpdated', (e, data) => {
-      // do something with data.listingID
-    });
-    ```
+  
 
   **[back to contents](#table-of-contents)**
 
@@ -3740,3 +3711,9 @@ having consecutive hmtl < a > tags within a line will break the markdown (e.g.<a
     - Whenever you fix a bug, _write a regression test_. A bug fixed without a regression test is almost certainly going to break again in the future.
 
 **[back to contents](#table-of-contents)**
+
+## Reference
+  - Compiled from the following sources:
+  1. https://github.com/airbnb/javascript
+
+**[back to top](#table-of-contents)**

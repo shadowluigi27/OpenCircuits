@@ -4,8 +4,6 @@ title: SCSS
 
 # Open Circuits (S)CSS  Style Guide!
 
-*Based off of AirBnB's CSS and CSS-In-Javascript style guides*
-
 ## Table of Contents
   1. [Formatting](#formatting)
   1. [Comments](#comments)
@@ -19,6 +17,7 @@ title: SCSS
   1. [Themes](#themes)
   1. [Variables](#variables)
   1. [Nested selectors](#nested-selectors)
+  1. [References](#references)
 
 ### Formatting
 
@@ -552,5 +551,12 @@ Within the SCSS, this looks like the below example with the oldest ancestor bein
   }
 }
 ```
+
+**[back to top](#table-of-contents)**
+
+## References
+  - Compiled from the following sources:
+  1. https://github.com/airbnb/css
+  1. https://github.com/airbnb/javascript/tree/master/css-in-javascript
 
 **[back to top](#table-of-contents)**

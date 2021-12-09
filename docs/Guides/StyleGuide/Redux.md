@@ -4,8 +4,6 @@ title: Redux
 
 # Open Circuits Redux Style Guide!
 
-*Based off of Redux's own style guide*
-
 
 TO DO:
 Restyle to be in same style as other guides
@@ -13,6 +11,7 @@ Fix table of contents structure
 include actual content in table of contents
 trim material
 add bold and italics and code sections
+remove style guide url from above
 
 
 ## Table of Contents
@@ -20,6 +19,7 @@ add bold and italics and code sections
   1. [Essential Rules](#essential-rules)
   1. [Strong Recommendations](#strong-recommendations)
   1. [Recommended Recommendations](#recommended-recommendations)
+  1. [References](#references)
 
 ## Essential Rules
 - Do not mutate state
@@ -302,3 +302,9 @@ The FSA spec says that "error" actions should set error: true, and use the same 
   - There are use cases when keeping form state in Redux does actually make sense, such as WYSIWYG live previews of edited item attributes. But, in most cases, this isn't necessary.
   
   **[back to top](#table-of-contents)**
+
+## References
+  - Compiled from the following sources:
+  1. https://redux.js.org/style-guide/style-guide
+
+**[back to top](#table-of-contents)**
