@@ -1,0 +1,17 @@
+This is a todo list for whoever continues the documentation:
+Vocab: 'pruning' refers to removing irrelevant content that is either obvious or does not apply to OpenCircuits either because these concepts are not in use of because a new local standard has been established
+
+Generally:
+Pull Requests.md can be expanded upon but can be seen as complete as it stands
+React.md is in the process of being pruned
+Redux.md is in the writing process: content is being added before being pruned
+SCSS.md is in the process of being pruned
+Typescript.md is in the process of being pruned
+
+File Specific:
+Typescript.md: 
+    'Events' section is currently blanked and needs to include a style guide for Open Circuits-style event handling
+
+Markdown tips, if you're having issues:
+Notes:
+having consecutive hmtl < a > tags within a line will break the markdown (e.g.<a name="types--primitives"></a><a name="1.1"></a> ) and nothing will render. Another potential reason for non-rendering is whitespace on empty line (VSCode sometimes indents empty lines and this indentation breaks the MD making things not render)

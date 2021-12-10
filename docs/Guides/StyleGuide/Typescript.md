@@ -4,13 +4,6 @@ title: Typescript
 
 # Open Circuits Typescript Style Guide!
 
-TO DO LIST:
-Replace 'Events' section to guide to Open Circuits-style event handling
-
-Notes:
-having consecutive hmtl < a > tags within a line will break the markdown (e.g.<a name="types--primitives"></a><a name="1.1"></a> ) and nothing will render. Another potential reason for non-rendering is whitespace on empty line (VSCode sometimes indents empty lines and this indentation breaks the MD making things not render)
-
-
 ## Table of Contents
 
   1. [Types](#types)
