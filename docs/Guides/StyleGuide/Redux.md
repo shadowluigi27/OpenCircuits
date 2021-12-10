@@ -4,16 +4,6 @@ title: Redux
 
 # Open Circuits Redux Style Guide!
 
-
-TO DO:
-Restyle to be in same style as other guides
-Fix table of contents structure
-include actual content in table of contents
-trim material
-add bold and italics and code sections
-remove style guide url from above
-
-
 ## Table of Contents
 
   1. [Essential Rules](#essential-rules)

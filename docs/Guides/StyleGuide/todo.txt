@@ -4,13 +4,20 @@ Vocab: 'pruning' refers to removing irrelevant content that is either obvious or
 Generally:
 Pull Requests.md can be expanded upon but can be seen as complete as it stands
 React.md is in the process of being pruned
-Redux.md is in the writing process: content is being added before being pruned
+Redux.md is in the writing/formatting process: content is being added before being pruned
 SCSS.md is in the process of being pruned
 Typescript.md is in the process of being pruned
 
 File Specific:
 Typescript.md: 
     'Events' section is currently blanked and needs to include a style guide for Open Circuits-style event handling
+Redux.md:
+    Restyle to be in same style as other guides
+    Fix table of contents structure
+    include actual content in table of contents
+    trim material
+    add bold and italics and code sections
+    remove style guide url from above
 
 Markdown tips, if you're having issues:
 Having consecutive hmtl < a > tags within a line will break the markdown (e.g.<a name="types--primitives"></a><a name="1.1"></a> ) and nothing will render. Another potential reason for non-rendering is whitespace on empty line (VSCode sometimes indents empty lines and this indentation breaks the MD making things not render)
