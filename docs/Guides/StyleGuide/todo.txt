@@ -1,5 +1,15 @@
 This is a todo list for whoever continues the documentation:
-Vocab: 'pruning' refers to removing irrelevant content that is either obvious or does not apply to OpenCircuits either because these concepts are not in use of because a new local standard has been established
+Pruning:
+In this document, 'pruning' refers to removing irrelevant content that is either obvious or does not apply to OpenCircuits either because these concepts are not in use of because a new local standard has been established
+The pruning methodology thus dar has been to check each statement according to the following criteria:
+    Is it common sense?
+    Is it deprecated (some outdated content is present)?
+    Is it relevant to the codebase?
+    Is it esoteric?
+    Has another, different standard been established within the codebase?
+    Does it add value (is it significant)?
+Depending on the above answesr, choose whether or not to keep it. If unsure, ask Leon
+
 
 Generally:
 Pull Requests.md can be expanded upon but can be seen as complete as it stands
