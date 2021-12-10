@@ -13,5 +13,4 @@ Typescript.md:
     'Events' section is currently blanked and needs to include a style guide for Open Circuits-style event handling
 
 Markdown tips, if you're having issues:
-Notes:
-having consecutive hmtl < a > tags within a line will break the markdown (e.g.<a name="types--primitives"></a><a name="1.1"></a> ) and nothing will render. Another potential reason for non-rendering is whitespace on empty line (VSCode sometimes indents empty lines and this indentation breaks the MD making things not render)
+Having consecutive hmtl < a > tags within a line will break the markdown (e.g.<a name="types--primitives"></a><a name="1.1"></a> ) and nothing will render. Another potential reason for non-rendering is whitespace on empty line (VSCode sometimes indents empty lines and this indentation breaks the MD making things not render)
